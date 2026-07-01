@@ -24,6 +24,8 @@ export interface FilterState {
   state: Status | 'all';
   /** Selected provenance, or 'all'. */
   provenance: Provenance | 'all';
+  /** When true, show only the ranked top clients (those with a usage_rank). */
+  topOnly: boolean;
 }
 
 export const EMPTY_FILTERS: FilterState = {
@@ -31,6 +33,7 @@ export const EMPTY_FILTERS: FilterState = {
   categoryId: 'all',
   state: 'all',
   provenance: 'all',
+  topOnly: false,
 };
 
 export function activeFilterCount(f: FilterState): number {
@@ -39,6 +42,7 @@ export function activeFilterCount(f: FilterState): number {
   if (f.categoryId !== 'all') n += 1;
   if (f.state !== 'all') n += 1;
   if (f.provenance !== 'all') n += 1;
+  if (f.topOnly) n += 1;
   return n;
 }
 
@@ -182,6 +186,20 @@ export default function Filters(props: FiltersProps) {
             ))}
           </select>
         </div>
+
+        {/* Top clients toggle */}
+        <label
+          class="flex cursor-pointer select-none items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
+          title="Show only the most-used MCP clients"
+        >
+          <input
+            type="checkbox"
+            checked={value.topOnly}
+            onChange={(e) => patch({ topOnly: (e.currentTarget as HTMLInputElement).checked })}
+            class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600"
+          />
+          Top clients only
+        </label>
 
         {/* Clear */}
         <button

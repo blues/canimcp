@@ -161,7 +161,9 @@ export default function MatrixTable(props: MatrixTableProps) {
       cat,
       features: cat.features.filter(rowVisibleByQuery),
     }));
-    const candidateClients = clients.filter(colVisibleByQuery);
+    const candidateClients = clients.filter(
+      (c) => colVisibleByQuery(c) && (!filters.topOnly || c.usage_rank != null),
+    );
 
     // State/provenance cross-filter: a row survives if some candidate client
     // has a passing cell; a column survives if some candidate feature does.
