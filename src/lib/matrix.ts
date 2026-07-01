@@ -88,35 +88,60 @@ export function statusLabel(status: Status): string {
   }
 }
 
-/** Emoji/symbol for a support status (used inside cells, decorative). */
+/**
+ * Crisp geometric glyph for a support status. Deliberately NOT emoji: emoji
+ * render inconsistently across platforms and add visual noise across 1000+
+ * cells. `unknown` renders as a faint dot so verified data stands out.
+ */
 export function statusSymbol(status: Status): string {
   switch (status) {
     case 'yes':
-      return '✅';
+      return '✓';
     case 'partial':
-      return '🟡';
+      return '◐';
     case 'no':
-      return '❌';
+      return '✕';
     case 'unknown':
     default:
-      return '❔';
+      return '·';
   }
 }
 
 /**
- * Tailwind utility classes for a cell's background/text by status.
- * Includes dark-mode variants so cells stay legible in either scheme.
+ * Cell fill classes by status. Verified states (yes/partial/no) are vivid and
+ * high-contrast so real data pops; `unknown` is intentionally near-blank so the
+ * eye is drawn to what's actually known — the key to scanning a sparse matrix.
  */
 export function statusColorClass(status: Status): string {
   switch (status) {
     case 'yes':
-      return 'bg-green-100 text-green-900 dark:bg-green-900/40 dark:text-green-100';
+      return 'bg-emerald-500 text-white dark:bg-emerald-500/90 dark:text-white';
     case 'partial':
-      return 'bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-100';
+      return 'bg-amber-400 text-amber-950 dark:bg-amber-400/90 dark:text-amber-950';
     case 'no':
-      return 'bg-red-100 text-red-900 dark:bg-red-900/40 dark:text-red-100';
+      return 'bg-rose-500 text-white dark:bg-rose-500/90 dark:text-white';
     case 'unknown':
     default:
-      return 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400';
+      return 'bg-gray-50 text-gray-400 dark:bg-gray-900 dark:text-gray-600';
   }
+}
+
+/** Fraction (0–1) of a client's cells that are `yes` across the given features. */
+export function clientCoverage(
+  cells: Record<string, SupportCell>,
+  featureIds: string[],
+): { yes: number; partial: number; known: number; total: number; score: number } {
+  let yes = 0;
+  let partial = 0;
+  let known = 0;
+  for (const id of featureIds) {
+    const s = cells[id]?.status ?? 'unknown';
+    if (s === 'yes') yes += 1;
+    else if (s === 'partial') partial += 1;
+    if (s !== 'unknown') known += 1;
+  }
+  const total = featureIds.length || 1;
+  // Score weights partial as half a point — used for the coverage bar.
+  const score = (yes + partial * 0.5) / total;
+  return { yes, partial, known, total: featureIds.length, score };
 }

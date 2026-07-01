@@ -29,7 +29,7 @@ import type {
   Status,
   SupportCell,
 } from '../lib/matrix';
-import { flattenFeatures, statusColorClass, statusLabel, statusSymbol } from '../lib/matrix';
+import { clientCoverage, flattenFeatures, statusColorClass, statusLabel, statusSymbol } from '../lib/matrix';
 import Filters, { EMPTY_FILTERS, type FilterState } from './Filters';
 import CellDetail from './CellDetail';
 
@@ -111,6 +111,13 @@ export default function MatrixTable(props: MatrixTableProps) {
   }, [categories]);
 
   const totalFeatures = useMemo(() => flattenFeatures(categories).length, [categories]);
+
+  // Stable list of every feature id — used for per-client coverage bars
+  // (coverage is computed over the FULL spec, not just the filtered view).
+  const allFeatureIds = useMemo(
+    () => flattenFeatures(categories).map((f) => f.id),
+    [categories],
+  );
 
   const { visibleCategories, visibleClients } = useMemo(() => {
     const q = filters.query.trim().toLowerCase();
@@ -209,50 +216,72 @@ export default function MatrixTable(props: MatrixTableProps) {
       />
 
       {hasResults ? (
-        <div
-          class="relative max-h-[80vh] overflow-auto rounded-lg border border-gray-200 dark:border-gray-800"
-          role="region"
-          aria-label="MCP client compatibility matrix"
-          tabIndex={0}
-        >
-          <table class="border-collapse text-sm">
-            <thead>
-              <tr>
-                {/* Top-left corner: sticky both directions, above everything. */}
-                <th
-                  scope="col"
-                  class="sticky left-0 top-0 z-30 min-w-[16rem] border-b border-r border-gray-200 bg-gray-50 px-3 py-2 text-left font-semibold text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200"
-                >
-                  Feature
-                </th>
-                {visibleClients.map((client) => (
+        <>
+          <InlineLegend />
+          <div
+            class="relative max-h-[80vh] overflow-auto rounded-lg border border-gray-200 shadow-sm dark:border-gray-800"
+            role="region"
+            aria-label="MCP client compatibility matrix"
+            tabIndex={0}
+          >
+            <table class="border-collapse text-sm">
+              <thead>
+                <tr>
+                  {/* Top-left corner: sticky both directions, above everything. */}
                   <th
-                    key={client.id}
                     scope="col"
-                    class="sticky top-0 z-20 min-w-[7rem] border-b border-l border-gray-200 bg-gray-50 px-2 py-2 text-center align-bottom font-semibold text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200"
-                    title={client.vendor ? `${client.title} — ${client.vendor}` : client.title}
+                    class="sticky left-0 top-0 z-30 min-w-[15rem] border-b border-r border-gray-200 bg-gray-100 px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400"
                   >
-                    <a href={`/client/${client.id}`} class="block truncate hover:underline">
-                      <Highlight text={client.title} query={filters.query} />
-                    </a>
+                    Feature ↓ / Client →
                   </th>
+                  {visibleClients.map((client) => {
+                    const cov = clientCoverage(matrix[client.id] ?? {}, allFeatureIds);
+                    const pct = Math.round(cov.score * 100);
+                    return (
+                      <th
+                        key={client.id}
+                        scope="col"
+                        class="sticky top-0 z-20 w-24 min-w-[6rem] border-b border-l border-gray-200 bg-gray-100 px-1.5 pb-1.5 pt-2 align-bottom font-semibold text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200"
+                        title={`${client.title}${client.vendor ? ` — ${client.vendor}` : ''}\n${cov.yes} supported, ${cov.partial} partial of ${cov.total} features`}
+                      >
+                        <a
+                          href={`/client/${client.id}`}
+                          class="mx-auto block max-w-[5.5rem] truncate text-center text-[13px] hover:underline"
+                        >
+                          <Highlight text={client.title} query={filters.query} />
+                        </a>
+                        {/* Coverage bar: instantly scan who supports the most. */}
+                        <div class="mt-1.5" aria-hidden="true">
+                          <div class="h-1 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+                            <div
+                              class="h-full rounded-full bg-emerald-500"
+                              style={`width:${pct}%`}
+                            />
+                          </div>
+                          <div class="mt-0.5 text-center text-[10px] font-normal tabular-nums text-gray-400 dark:text-gray-500">
+                            {pct}%
+                          </div>
+                        </div>
+                      </th>
+                    );
+                  })}
+                </tr>
+              </thead>
+              <tbody>
+                {visibleCategories.map((category) => (
+                  <CategoryRows
+                    key={category.id}
+                    category={category}
+                    clients={visibleClients}
+                    matrix={matrix}
+                    query={filters.query}
+                    onCellClick={handleCellClick}
+                  />
                 ))}
-              </tr>
-            </thead>
-            <tbody>
-              {visibleCategories.map((category) => (
-                <CategoryRows
-                  key={category.id}
-                  category={category}
-                  clients={visibleClients}
-                  matrix={matrix}
-                  query={filters.query}
-                  onCellClick={handleCellClick}
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </tbody>
+            </table>
+          </div>
+        </>
       ) : (
         <div class="rounded-lg border border-dashed border-gray-300 p-8 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
           <p>No features or clients match the current filters.</p>
@@ -278,6 +307,40 @@ export default function MatrixTable(props: MatrixTableProps) {
   );
 }
 
+function InlineLegend() {
+  const items: { status: Status; label: string }[] = [
+    { status: 'yes', label: 'Supported' },
+    { status: 'partial', label: 'Partial' },
+    { status: 'no', label: 'Not supported' },
+    { status: 'unknown', label: 'Unknown' },
+  ];
+  return (
+    <div class="mb-2 flex flex-wrap items-center gap-x-4 gap-y-2 px-1 text-xs text-gray-600 dark:text-gray-400">
+      {items.map(({ status, label }) => (
+        <span key={status} class="inline-flex items-center gap-1.5">
+          <span
+            class={`inline-flex h-4 w-4 items-center justify-center rounded text-[10px] font-bold ${statusColorClass(status)} ${status === 'unknown' ? 'border border-gray-300 dark:border-gray-700' : ''}`}
+            aria-hidden="true"
+          >
+            {statusSymbol(status)}
+          </span>
+          {label}
+        </span>
+      ))}
+      <span class="inline-flex items-center gap-1.5">
+        <span class="relative inline-flex h-4 w-4 items-center justify-center rounded bg-emerald-500">
+          <span class="absolute right-0.5 top-0.5 h-1 w-1 rounded-full bg-white opacity-80" />
+        </span>
+        Cited source
+      </span>
+      <span class="ml-auto hidden items-center gap-1.5 sm:inline-flex">
+        <span class="inline-block h-1 w-8 rounded-full bg-emerald-500" aria-hidden="true" />
+        Coverage bar = % of spec supported
+      </span>
+    </div>
+  );
+}
+
 function CategoryRows(props: {
   category: Category;
   clients: ClientMeta[];
@@ -295,19 +358,23 @@ function CategoryRows(props: {
         <th
           scope="colgroup"
           colSpan={colSpan}
-          class="sticky left-0 z-10 border-y border-gray-200 bg-gray-100 px-3 py-1.5 text-left text-xs font-bold uppercase tracking-wide text-gray-600 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-300"
+          class="sticky left-0 z-10 border-y border-gray-200 bg-slate-100 px-3 py-2 text-left text-xs font-bold uppercase tracking-wider text-slate-600 dark:border-gray-800 dark:bg-slate-800/80 dark:text-slate-300"
         >
           {category.title}
         </th>
       </tr>
       {category.features.map((feature) => (
-        <tr key={feature.id} class="even:bg-gray-50/50 dark:even:bg-gray-900/40">
-          {/* Sticky first column: feature title. */}
+        <tr key={feature.id} class="even:bg-gray-50/60 dark:even:bg-gray-900/40">
+          {/* Sticky first column: feature title. Fixed height so rows align. */}
           <th
             scope="row"
-            class="sticky left-0 z-10 min-w-[16rem] border-b border-r border-gray-200 bg-white px-3 py-2 text-left font-medium text-gray-800 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-200"
+            class="sticky left-0 z-10 h-9 min-w-[15rem] max-w-[15rem] border-b border-r border-gray-200 bg-white px-3 text-left font-medium text-gray-800 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-200"
           >
-            <a href={`/feature/${feature.id}`} class="hover:underline">
+            <a
+              href={`/feature/${feature.id}`}
+              class="block truncate hover:text-blue-600 hover:underline dark:hover:text-blue-400"
+              title={feature.title}
+            >
               <Highlight text={feature.title} query={query} />
             </a>
           </th>
@@ -315,6 +382,7 @@ function CategoryRows(props: {
             const cell = getCell(matrix, client.id, feature.id);
             const status: Status = cell.status;
             const aria = `${client.title} — ${feature.title}: ${statusLabel(status)}. Click for details.`;
+            const sourced = Boolean(cell.source);
             return (
               <td
                 key={client.id}
@@ -324,17 +392,24 @@ function CategoryRows(props: {
                 onClick={() =>
                   onCellClick({ clientId: client.id, featureId: feature.id, cell })
                 }
-                class={`cursor-pointer border-b border-l border-gray-200 px-2 py-2 text-center hover:ring-2 hover:ring-inset hover:ring-blue-400 dark:border-gray-800 ${statusColorClass(status)}`}
+                class={`group relative h-9 w-24 min-w-[6rem] cursor-pointer border-b border-l border-gray-200 text-center transition-colors hover:ring-2 hover:ring-inset hover:ring-blue-500 dark:border-gray-800 ${statusColorClass(status)}`}
               >
                 <button
                   type="button"
                   aria-label={aria}
                   title={aria}
-                  class="block w-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                  class="flex h-full w-full items-center justify-center focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
                 >
-                  <span role="img" aria-hidden="true">
+                  <span class="text-sm font-bold leading-none" role="img" aria-hidden="true">
                     {statusSymbol(status)}
                   </span>
+                  {/* Tiny dot marks cells backed by a real source. */}
+                  {sourced ? (
+                    <span
+                      class="absolute right-1 top-1 h-1 w-1 rounded-full bg-current opacity-60"
+                      aria-hidden="true"
+                    />
+                  ) : null}
                 </button>
               </td>
             );

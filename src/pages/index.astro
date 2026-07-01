@@ -10,21 +10,63 @@ const featureCount = bundle.features.reduce(
   (n, cat) => n + cat.features.length,
   0,
 );
+const categoryCount = bundle.features.length;
+
+// Headline stats: how much of the matrix is actually populated.
+let sourced = 0;
+let verifiedCells = 0;
+for (const row of Object.values(bundle.matrix)) {
+  for (const cell of Object.values(row)) {
+    if (cell.status !== 'unknown') verifiedCells += 1;
+    if (cell.source) sourced += 1;
+  }
+}
+
+const stats = [
+  { value: clientCount, label: 'MCP clients' },
+  { value: featureCount, label: 'tracked features' },
+  { value: categoryCount, label: 'capability areas' },
+  { value: sourced, label: 'source-cited cells' },
+];
 ---
 
 <Base
   title="canimcp — MCP Client Compatibility Matrix"
-  description="A caniuse-style compatibility matrix showing which MCP features each major MCP client supports, with per-feature granularity."
+  description="A caniuse-style compatibility matrix showing which MCP features each major MCP client supports, with per-feature granularity and sourced evidence."
   specVersion={bundle.spec_version}
   generatedAt={bundle.generated_at}
 >
-  <section class="mx-auto mb-5 max-w-3xl">
-    <p class="text-base text-gray-700 dark:text-gray-300">
-      <strong>canimcp</strong> is a caniuse-style compatibility matrix for the
-      Model Context Protocol: it shows, feature by feature, which MCP features
-      each client supports — tracking {featureCount} features across {clientCount}
-      {' '}clients. Green means supported, yellow partial, red not supported, and
-      a question mark means unverified.
+  <!-- Hero -->
+  <section class="mx-auto mb-6 max-w-3xl text-center">
+    <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-gray-50">
+      Can I MCP?
+    </h1>
+    <p class="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-gray-600 dark:text-gray-300">
+      A <span class="font-semibold text-gray-900 dark:text-gray-100">caniuse-style</span>
+      compatibility matrix for the Model Context Protocol — see, feature by
+      feature, exactly which MCP capabilities each client supports, with
+      dated and sourced evidence behind every claim.
+    </p>
+
+    <!-- Stat band -->
+    <dl class="mx-auto mt-6 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
+      {
+        stats.map((s) => (
+          <div class="rounded-lg border border-gray-200 bg-gray-50 px-3 py-3 dark:border-gray-800 dark:bg-gray-900/50">
+            <dt class="text-2xl font-bold tabular-nums text-gray-900 dark:text-gray-50">
+              {s.value}
+            </dt>
+            <dd class="mt-0.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+              {s.label}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <p class="mt-4 text-xs text-gray-400 dark:text-gray-500">
+      Tip: click any cell for its source & notes · search or filter below ·
+      click a client or feature name to drill in.
     </p>
   </section>
 
