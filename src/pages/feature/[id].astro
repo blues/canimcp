@@ -1,0 +1,248 @@
+---
+/**
+ * Feature-centric page — "which clients support X?".
+ *
+ * caniuse's signature view: one static page per feature id in the taxonomy.
+ * It lists EVERY MCP client and that client's support status for this one
+ * feature, with per-cell notes / source / dates / provenance where present.
+ *
+ * Fully static / server-rendered — no client-side JS island needed.
+ */
+import Base from '../../layouts/Base.astro';
+import { loadMatrix } from '../../lib/loadMatrix';
+import {
+  flattenFeatures,
+  statusColorClass,
+  statusLabel,
+  statusSymbol,
+} from '../../lib/matrix';
+import type {
+  Category,
+  ClientMeta,
+  Feature,
+  Status,
+  SupportCell,
+} from '../../lib/matrix';
+
+export async function getStaticPaths() {
+  const bundle = loadMatrix();
+  return flattenFeatures(bundle.features).map((feature: Feature) => {
+    // Find the category this feature belongs to (for the breadcrumb label).
+    const category = bundle.features.find((cat: Category) =>
+      cat.features.some((f) => f.id === feature.id),
+    );
+    return {
+      params: { id: feature.id },
+      props: {
+        feature,
+        categoryTitle: category?.title ?? null,
+        clients: bundle.clients,
+        matrix: bundle.matrix,
+        specVersion: bundle.spec_version,
+      },
+    };
+  });
+}
+
+interface Props {
+  feature: Feature;
+  categoryTitle: string | null;
+  clients: ClientMeta[];
+  matrix: Record<string, Record<string, SupportCell>>;
+  specVersion: string;
+}
+
+const { feature, categoryTitle, clients, matrix, specVersion } =
+  Astro.props as Props;
+
+const UNKNOWN_CELL: SupportCell = { status: 'unknown' };
+
+/** Rows: one per client, in the bundle's pre-sorted order (usage_rank, title). */
+const rows = clients.map((client) => {
+  const cell: SupportCell = matrix[client.id]?.[feature.id] ?? UNKNOWN_CELL;
+  return { client, cell };
+});
+
+const pageTitle = `${feature.title} — MCP client support · canimcp`;
+const pageDescription = `Which MCP clients support "${feature.title}"? A per-client compatibility breakdown across ${clients.length} clients.`;
+
+/** Human labels for provenance values. */
+function provenanceLabel(p: SupportCell['provenance']): string {
+  switch (p) {
+    case 'manual':
+      return 'Manually verified';
+    case 'conformance':
+      return 'Conformance test';
+    case 'apify':
+      return 'Automated (Apify)';
+    case 'submission':
+      return 'Community submission';
+    default:
+      return 'Unknown';
+  }
+}
+---
+
+<Base title={pageTitle} description={pageDescription} specVersion={specVersion}>
+  <article class="mx-auto max-w-4xl">
+    <nav class="mb-4 text-sm text-gray-600 dark:text-gray-400" aria-label="Breadcrumb">
+      <a href="/" class="hover:underline">Matrix</a>
+      {
+        categoryTitle && (
+          <>
+            <span class="mx-1.5 text-gray-400 dark:text-gray-600">/</span>
+            <span>{categoryTitle}</span>
+          </>
+        )
+      }
+    </nav>
+
+    <header class="mb-6 border-b border-gray-200 pb-5 dark:border-gray-800">
+      <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl dark:text-gray-100">
+        {feature.title}
+      </h1>
+      <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+        <code
+          class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+        >
+          {feature.id}
+        </code>
+        {
+          feature.spec_url && (
+            <a
+              href={feature.spec_url}
+              class="text-indigo-700 hover:underline dark:text-indigo-300"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Spec reference ↗
+            </a>
+          )
+        }
+      </div>
+      <p class="mt-3 text-base text-gray-700 dark:text-gray-300">
+        Support for this feature across {clients.length} MCP clients.
+      </p>
+    </header>
+
+    <div
+      class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-800"
+    >
+      <table class="w-full border-collapse text-sm">
+        <caption class="sr-only">
+          {feature.title} support status per MCP client
+        </caption>
+        <thead>
+          <tr>
+            <th
+              scope="col"
+              class="border-b border-gray-200 bg-gray-50 px-3 py-2 text-left font-semibold text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200"
+            >
+              Client
+            </th>
+            <th
+              scope="col"
+              class="border-b border-gray-200 bg-gray-50 px-3 py-2 text-left font-semibold text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200"
+            >
+              Status
+            </th>
+            <th
+              scope="col"
+              class="border-b border-gray-200 bg-gray-50 px-3 py-2 text-left font-semibold text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200"
+            >
+              Details
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rows.map(({ client, cell }) => {
+              const status: Status = cell.status;
+              const aria = `${client.title}: ${statusLabel(status)}`;
+              return (
+                <tr class="border-b border-gray-200 last:border-b-0 even:bg-gray-50/50 dark:border-gray-800 dark:even:bg-gray-900/40">
+                  <th
+                    scope="row"
+                    class="px-3 py-3 text-left align-top font-medium text-gray-800 dark:text-gray-200"
+                  >
+                    <a
+                      href={`/client/${client.id}`}
+                      class="hover:underline"
+                    >
+                      {client.title}
+                    </a>
+                    {client.vendor && (
+                      <span class="mt-0.5 block text-xs font-normal text-gray-500 dark:text-gray-400">
+                        {client.vendor}
+                      </span>
+                    )}
+                  </th>
+                  <td class="px-3 py-3 align-top">
+                    <span
+                      class={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColorClass(status)}`}
+                    >
+                      <span role="img" aria-label={aria} title={aria}>
+                        {statusSymbol(status)}
+                      </span>
+                      <span>{statusLabel(status)}</span>
+                    </span>
+                  </td>
+                  <td class="px-3 py-3 align-top text-gray-700 dark:text-gray-300">
+                    {cell.notes && (
+                      <p class="text-sm">{cell.notes}</p>
+                    )}
+                    <dl class="mt-1 flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-gray-500 dark:text-gray-400">
+                      {cell.version_tested && (
+                        <div>
+                          <dt class="inline font-medium">Version tested:</dt>{' '}
+                          <dd class="inline">{cell.version_tested}</dd>
+                        </div>
+                      )}
+                      {cell.last_verified && (
+                        <div>
+                          <dt class="inline font-medium">Last verified:</dt>{' '}
+                          <dd class="inline">{cell.last_verified}</dd>
+                        </div>
+                      )}
+                      {cell.provenance && (
+                        <div>
+                          <dt class="inline font-medium">Source type:</dt>{' '}
+                          <dd class="inline">{provenanceLabel(cell.provenance)}</dd>
+                        </div>
+                      )}
+                    </dl>
+                    {cell.source && (
+                      <a
+                        href={cell.source}
+                        class="mt-1 inline-block text-xs text-indigo-700 hover:underline dark:text-indigo-300"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Source ↗
+                      </a>
+                    )}
+                    {!cell.notes &&
+                      !cell.version_tested &&
+                      !cell.last_verified &&
+                      !cell.provenance &&
+                      !cell.source && (
+                        <span class="text-xs text-gray-400 dark:text-gray-500">
+                          No additional details.
+                        </span>
+                      )}
+                  </td>
+                </tr>
+              );
+            })
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <p class="mt-6 text-sm">
+      <a href="/" class="text-indigo-700 hover:underline dark:text-indigo-300">
+        ← Back to the full matrix
+      </a>
+    </p>
+  </article>
+</Base>

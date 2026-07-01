@@ -1,0 +1,294 @@
+---
+/**
+ * canimcp — per-client compatibility page (`/client/<id>`).
+ *
+ * One static page per MCP client (SEO-friendly + shareable). Shows the
+ * client's metadata header, then every tracked feature grouped by category
+ * with its 4-state support status and any notes / source / verification date /
+ * version / provenance. Statically server-rendered — no island needed.
+ */
+import Base from '../../layouts/Base.astro';
+import { loadMatrix } from '../../lib/loadMatrix';
+import type {
+  ClientMeta,
+  Category,
+  Matrix,
+  Status,
+  SupportCell,
+} from '../../lib/matrix';
+import { statusColorClass, statusLabel, statusSymbol } from '../../lib/matrix';
+
+export async function getStaticPaths() {
+  const bundle = loadMatrix();
+  return bundle.clients.map((client) => ({
+    params: { id: client.id },
+    props: {
+      client,
+      categories: bundle.features,
+      matrix: bundle.matrix,
+      specVersion: bundle.spec_version,
+    },
+  }));
+}
+
+interface Props {
+  client: ClientMeta;
+  categories: Category[];
+  matrix: Matrix;
+  specVersion: string;
+}
+
+const { client, categories, matrix, specVersion } = Astro.props as Props;
+
+const UNKNOWN_CELL: SupportCell = { status: 'unknown' };
+function getCell(featureId: string): SupportCell {
+  return matrix[client.id]?.[featureId] ?? UNKNOWN_CELL;
+}
+
+/** Human labels for the provenance badge. */
+const PROVENANCE_LABEL: Record<string, string> = {
+  manual: 'Manual',
+  conformance: 'Conformance test',
+  apify: 'Automated crawl',
+  submission: 'Community submission',
+};
+
+/** Per-category tally of statuses for the quick summary. */
+function tally(category: Category): Record<Status, number> {
+  const counts: Record<Status, number> = { yes: 0, partial: 0, no: 0, unknown: 0 };
+  for (const feature of category.features) {
+    counts[getCell(feature.id).status] += 1;
+  }
+  return counts;
+}
+
+const pageTitle = `${client.title} — MCP feature support · canimcp`;
+const pageDescription = `Which Model Context Protocol features ${client.title} supports, feature by feature, with sources and verification dates.`;
+---
+
+<Base title={pageTitle} description={pageDescription} specVersion={specVersion}>
+  <div class="mx-auto max-w-4xl">
+    <nav class="mb-4 text-sm">
+      <a
+        href="/"
+        class="text-indigo-700 hover:underline dark:text-indigo-300"
+      >
+        ← All clients &amp; features
+      </a>
+    </nav>
+
+    {/* Client header */}
+    <header
+      class="mb-8 rounded-lg border border-gray-200 bg-gray-50 p-5 dark:border-gray-800 dark:bg-gray-900"
+    >
+      <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
+        {client.title}
+      </h1>
+      {
+        client.vendor && (
+          <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            by {client.vendor}
+          </p>
+        )
+      }
+
+      <dl class="mt-4 grid grid-cols-1 gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+        {
+          client.url && (
+            <div class="flex flex-col">
+              <dt class="font-medium text-gray-500 dark:text-gray-400">Website</dt>
+              <dd>
+                <a
+                  href={client.url}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  class="break-all text-indigo-700 hover:underline dark:text-indigo-300"
+                >
+                  {client.url}
+                </a>
+              </dd>
+            </div>
+          )
+        }
+        {
+          client.install_docs_url && (
+            <div class="flex flex-col">
+              <dt class="font-medium text-gray-500 dark:text-gray-400">
+                Install docs
+              </dt>
+              <dd>
+                <a
+                  href={client.install_docs_url}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  class="break-all text-indigo-700 hover:underline dark:text-indigo-300"
+                >
+                  {client.install_docs_url}
+                </a>
+              </dd>
+            </div>
+          )
+        }
+        {
+          client.clientInfo_name && (
+            <div class="flex flex-col">
+              <dt class="font-medium text-gray-500 dark:text-gray-400">
+                clientInfo.name
+              </dt>
+              <dd class="font-mono text-gray-800 dark:text-gray-200">
+                {client.clientInfo_name}
+              </dd>
+            </div>
+          )
+        }
+        {
+          client.protocolVersion && (
+            <div class="flex flex-col">
+              <dt class="font-medium text-gray-500 dark:text-gray-400">
+                Protocol version
+              </dt>
+              <dd class="font-mono text-gray-800 dark:text-gray-200">
+                {client.protocolVersion}
+              </dd>
+            </div>
+          )
+        }
+        {
+          client.platforms && client.platforms.length > 0 && (
+            <div class="flex flex-col">
+              <dt class="font-medium text-gray-500 dark:text-gray-400">Platforms</dt>
+              <dd class="flex flex-wrap gap-1.5">
+                {client.platforms.map((platform) => (
+                  <span class="inline-flex items-center rounded bg-gray-200 px-1.5 py-0.5 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                    {platform}
+                  </span>
+                ))}
+              </dd>
+            </div>
+          )
+        }
+      </dl>
+    </header>
+
+    {/* Feature support, grouped by category */}
+    {
+      categories.map((category) => {
+        const counts = tally(category);
+        return (
+          <section class="mb-8">
+            <div class="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-gray-200 pb-2 dark:border-gray-800">
+              <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">
+                {category.title}
+              </h2>
+              <p
+                class="text-xs text-gray-500 dark:text-gray-400"
+                aria-label={`${counts.yes} supported, ${counts.partial} partial, ${counts.no} not supported, ${counts.unknown} unknown`}
+              >
+                <span class="text-green-700 dark:text-green-400">
+                  {statusSymbol('yes')} {counts.yes}
+                </span>
+                {' · '}
+                <span class="text-amber-700 dark:text-amber-400">
+                  {statusSymbol('partial')} {counts.partial}
+                </span>
+                {' · '}
+                <span class="text-red-700 dark:text-red-400">
+                  {statusSymbol('no')} {counts.no}
+                </span>
+                {' · '}
+                <span class="text-gray-500 dark:text-gray-400">
+                  {statusSymbol('unknown')} {counts.unknown}
+                </span>
+              </p>
+            </div>
+
+            <ul class="space-y-3">
+              {category.features.map((feature) => {
+                const cell = getCell(feature.id);
+                const status = cell.status;
+                const label = statusLabel(status);
+                return (
+                  <li class="rounded-lg border border-gray-200 p-4 dark:border-gray-800">
+                    <div class="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+                      <h3 class="text-base font-medium text-gray-900 dark:text-gray-100">
+                        <a
+                          href={`/feature/${feature.id}`}
+                          class="hover:underline"
+                        >
+                          {feature.title}
+                        </a>
+                      </h3>
+                      <span
+                        class={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColorClass(status)}`}
+                      >
+                        <span role="img" aria-hidden="true">
+                          {statusSymbol(status)}
+                        </span>
+                        {label}
+                      </span>
+                    </div>
+
+                    {cell.notes && (
+                      <p class="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                        {cell.notes}
+                      </p>
+                    )}
+
+                    {(cell.source ||
+                      cell.last_verified ||
+                      cell.version_tested ||
+                      cell.provenance) && (
+                      <dl class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
+                        {cell.source && (
+                          <div class="flex items-center gap-1">
+                            <dt class="sr-only">Source</dt>
+                            <dd>
+                              <a
+                                href={cell.source}
+                                rel="noopener noreferrer"
+                                target="_blank"
+                                class="break-all text-indigo-700 hover:underline dark:text-indigo-300"
+                              >
+                                Source
+                              </a>
+                            </dd>
+                          </div>
+                        )}
+                        {cell.last_verified && (
+                          <div class="flex items-center gap-1">
+                            <dt class="font-medium">Verified</dt>
+                            <dd>
+                              <time datetime={cell.last_verified}>
+                                {cell.last_verified}
+                              </time>
+                            </dd>
+                          </div>
+                        )}
+                        {cell.version_tested && (
+                          <div class="flex items-center gap-1">
+                            <dt class="font-medium">Version</dt>
+                            <dd class="font-mono">{cell.version_tested}</dd>
+                          </div>
+                        )}
+                        {cell.provenance && (
+                          <div class="flex items-center gap-1">
+                            <dt class="sr-only">Provenance</dt>
+                            <dd>
+                              <span class="inline-flex items-center rounded bg-gray-200 px-1.5 py-0.5 font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+                                {PROVENANCE_LABEL[cell.provenance] ?? cell.provenance}
+                              </span>
+                            </dd>
+                          </div>
+                        )}
+                      </dl>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        );
+      })
+    }
+  </div>
+</Base>
