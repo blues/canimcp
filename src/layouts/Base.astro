@@ -1,0 +1,73 @@
+---
+/**
+ * Base HTML layout for canimcp.
+ *
+ * Provides the document shell, global styles, and a simple site header with
+ * the name, tagline, and a spec-version badge. Pages fill the <slot/>.
+ *
+ * The footer (legend + Blues attribution) is intentionally NOT built here —
+ * it is owned by a later task (2.7). See the placeholder comment near the end.
+ */
+interface Props {
+  /** Page <title>; falls back to the site default. */
+  title?: string;
+  /** Meta description. */
+  description?: string;
+  /** Spec version rendered in the header badge (e.g. "2025-06-18"). */
+  specVersion?: string;
+}
+
+const {
+  title = 'canimcp — MCP Client Compatibility Matrix',
+  description = 'A caniuse-style compatibility matrix showing which MCP features each major MCP client supports.',
+  specVersion,
+} = Astro.props;
+
+import '../styles/global.css';
+---
+
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <slot name="head" />
+  </head>
+  <body
+    class="min-h-full bg-white text-gray-900 antialiased dark:bg-gray-950 dark:text-gray-100"
+  >
+    <header
+      class="border-b border-gray-200 bg-white/90 px-4 py-4 backdrop-blur sm:px-6 dark:border-gray-800 dark:bg-gray-950/90"
+    >
+      <div class="mx-auto flex max-w-full flex-wrap items-baseline gap-x-3 gap-y-1">
+        <a href="/" class="text-2xl font-bold tracking-tight">
+          <span class="text-gray-900 dark:text-gray-100">canimcp</span>
+        </a>
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+          Which MCP features does each client support?
+        </p>
+        {
+          specVersion && (
+            <span
+              class="ml-auto inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-200"
+              title={`MCP spec version ${specVersion}`}
+            >
+              spec {specVersion}
+            </span>
+          )
+        }
+      </div>
+    </header>
+
+    <main class="px-4 py-6 sm:px-6">
+      <slot />
+    </main>
+
+    <!-- footer slot: legend & Blues footer added in Task 2.7 -->
+  </body>
+</html>

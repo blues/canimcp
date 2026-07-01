@@ -1,17 +1,36 @@
 ---
+import Base from '../layouts/Base.astro';
+import MatrixTable from '../components/MatrixTable.tsx';
+import { loadMatrix } from '../lib/loadMatrix';
 
+// Read the compiled bundle from disk at build time.
+const bundle = loadMatrix();
+const clientCount = bundle.clients.length;
+const featureCount = bundle.features.reduce(
+  (n, cat) => n + cat.features.length,
+  0,
+);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base
+  title="canimcp — MCP Client Compatibility Matrix"
+  description="A caniuse-style compatibility matrix showing which MCP features each major MCP client supports, with per-feature granularity."
+  specVersion={bundle.spec_version}
+>
+  <section class="mx-auto mb-5 max-w-3xl">
+    <p class="text-base text-gray-700 dark:text-gray-300">
+      <strong>canimcp</strong> is a caniuse-style compatibility matrix for the
+      Model Context Protocol: it shows, feature by feature, which MCP features
+      each client supports — tracking {featureCount} features across {clientCount}
+      {' '}clients. Green means supported, yellow partial, red not supported, and
+      a question mark means unverified.
+    </p>
+  </section>
+
+  <MatrixTable
+    categories={bundle.features}
+    clients={bundle.clients}
+    matrix={bundle.matrix}
+    client:load
+  />
+</Base>
