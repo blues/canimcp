@@ -36,6 +36,7 @@ export async function getStaticPaths() {
       props: {
         feature,
         categoryTitle: category?.title ?? null,
+        categorySpecUrl: category?.spec_url ?? null,
         clients: bundle.clients,
         matrix: bundle.matrix,
         specVersion: bundle.spec_version,
@@ -47,13 +48,17 @@ export async function getStaticPaths() {
 interface Props {
   feature: Feature;
   categoryTitle: string | null;
+  categorySpecUrl: string | null;
   clients: ClientMeta[];
   matrix: Record<string, Record<string, SupportCell>>;
   specVersion: string;
 }
 
-const { feature, categoryTitle, clients, matrix, specVersion } =
+const { feature, categoryTitle, categorySpecUrl, clients, matrix, specVersion } =
   Astro.props as Props;
+
+// Prefer a feature-specific spec URL; fall back to the category's spec page.
+const specUrl = feature.spec_url ?? categorySpecUrl;
 
 const UNKNOWN_CELL: SupportCell = { status: 'unknown' };
 
@@ -108,14 +113,14 @@ function provenanceLabel(p: SupportCell['provenance']): string {
           {feature.id}
         </code>
         {
-          feature.spec_url && (
+          specUrl && (
             <a
-              href={feature.spec_url}
+              href={specUrl}
               class="text-indigo-700 hover:underline dark:text-indigo-300"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Spec reference ↗
+              Read in the MCP spec ↗
             </a>
           )
         }

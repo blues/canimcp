@@ -37,6 +37,7 @@ export interface Feature {
 export interface Category {
   id: string;
   title: string;
+  spec_url?: string;
   features: Feature[];
 }
 
