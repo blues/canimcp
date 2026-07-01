@@ -26,9 +26,11 @@
     "yaml": "^2.9.0"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.9",
     "@types/node": "^26.1.0",
     "@vitest/ui": "^4.1.9",
     "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
     "vitest": "^4.1.9"
   }
 }
