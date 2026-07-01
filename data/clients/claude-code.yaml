@@ -1,5 +1,3 @@
-# Seed-imported from apify/mcp-client-capabilities (Apache-2.0).
-# Coarse data — sub-features left `unknown`. Review & source before promoting.
 id: claude-code
 title: Claude Code
 url: https://claude.com/product/claude-code
@@ -9,14 +7,16 @@ usage_rank: 2
 support:
   tools.call:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://code.claude.com/docs/en/mcp
+    notes: MCP servers give Claude Code access to tools.
+    provenance: manual
+    last_verified: 2026-07-01
   tools.list:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://code.claude.com/docs/en/mcp
+    notes: Runs tools/list capability discovery on connect.
+    provenance: manual
+    last_verified: 2026-07-01
   resources.read:
     status: yes
     provenance: apify
@@ -24,21 +24,67 @@ support:
     last_verified: 2026-02-02
   resources.list:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://code.claude.com/docs/en/mcp
+    notes: Runs resources/list capability discovery on connect.
+    provenance: manual
+    last_verified: 2026-07-01
   prompts.get:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://code.claude.com/docs/en/mcp
+    notes: MCP prompts become commands in Claude Code.
+    provenance: manual
+    last_verified: 2026-07-01
   prompts.list:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://code.claude.com/docs/en/mcp
+    notes: Runs prompts/list capability discovery on connect.
+    provenance: manual
+    last_verified: 2026-07-01
   roots.list:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://code.claude.com/docs/en/mcp
+    notes: Server can call roots/list; returns launch directory.
+    provenance: manual
+    last_verified: 2026-07-01
+  transport.stdio:
+    status: yes
+    source: https://code.claude.com/docs/en/mcp
+    notes: Stdio servers run as local processes.
+    provenance: manual
+    last_verified: 2026-07-01
+  transport.streamable_http:
+    status: yes
+    source: https://code.claude.com/docs/en/mcp
+    notes: type accepts streamable-http; HTTP is recommended.
+    provenance: manual
+    last_verified: 2026-07-01
+  transport.sse:
+    status: partial
+    source: https://code.claude.com/docs/en/mcp
+    notes: SSE transport supported but deprecated.
+    provenance: manual
+    last_verified: 2026-07-01
+  tools.listChanged:
+    status: yes
+    source: https://code.claude.com/docs/en/mcp
+    notes: Supports list_changed notifications for tools.
+    provenance: manual
+    last_verified: 2026-07-01
+  prompts.listChanged:
+    status: yes
+    source: https://code.claude.com/docs/en/mcp
+    notes: Supports list_changed notifications for prompts.
+    provenance: manual
+    last_verified: 2026-07-01
+  resources.listChanged:
+    status: yes
+    source: https://code.claude.com/docs/en/mcp
+    notes: Supports list_changed notifications for resources.
+    provenance: manual
+    last_verified: 2026-07-01
+  auth.oauth:
+    status: yes
+    source: https://code.claude.com/docs/en/mcp
+    notes: Authenticate with remote servers requiring OAuth 2.0.
+    provenance: manual
+    last_verified: 2026-07-01

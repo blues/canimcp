@@ -1,5 +1,3 @@
-# Seed-imported from apify/mcp-client-capabilities (Apache-2.0).
-# Coarse data — sub-features left `unknown`. Review & source before promoting.
 id: visual-studio-code
 title: Visual Studio Code
 url: https://code.visualstudio.com
@@ -9,24 +7,28 @@ usage_rank: 3
 support:
   tools.call:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://code.visualstudio.com/api/extension-guides/ai/mcp
+    notes: MCP tools supported in agent mode, invoked as needed.
+    provenance: manual
+    last_verified: 2026-07-01
   tools.list:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://code.visualstudio.com/api/extension-guides/ai/mcp
+    notes: Users enable/configure tools with the tools picker.
+    provenance: manual
+    last_verified: 2026-07-01
   tools.listChanged:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://code.visualstudio.com/api/extension-guides/ai/mcp
+    notes: Supports dynamic tool discovery at runtime.
+    provenance: manual
+    last_verified: 2026-07-01
   resources.read:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://code.visualstudio.com/api/extension-guides/ai/mcp
+    notes: Resources can be browsed/attached as chat context.
+    provenance: manual
+    last_verified: 2026-07-01
   resources.list:
     status: yes
     provenance: apify
@@ -34,9 +36,10 @@ support:
     last_verified: 2026-02-02
   prompts.get:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://code.visualstudio.com/api/extension-guides/ai/mcp
+    notes: Prompts invocable as slash commands in chat.
+    provenance: manual
+    last_verified: 2026-07-01
   prompts.list:
     status: yes
     provenance: apify
@@ -44,21 +47,72 @@ support:
     last_verified: 2026-02-02
   sampling.createMessage:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://code.visualstudio.com/api/extension-guides/ai/mcp
+    notes: Servers can make LM requests using the user's models.
+    provenance: manual
+    last_verified: 2026-07-01
   roots.list:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://code.visualstudio.com/api/extension-guides/ai/mcp
+    notes: Provides the server with the user's workspace root folder(s).
+    provenance: manual
+    last_verified: 2026-07-01
   elicitation.create:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://code.visualstudio.com/api/extension-guides/ai/mcp
+    notes: "Elicitation: request input from the user."
+    provenance: manual
+    last_verified: 2026-07-01
   roots.listChanged:
     status: yes
     provenance: apify
     source: https://github.com/apify/mcp-client-capabilities
     last_verified: 2026-02-02
+  transport.stdio:
+    status: yes
+    source: https://code.visualstudio.com/api/extension-guides/ai/mcp
+    notes: Docs list Local stdio as a supported transport.
+    provenance: manual
+    last_verified: 2026-07-01
+  transport.streamable_http:
+    status: yes
+    source: https://code.visualstudio.com/api/extension-guides/ai/mcp
+    notes: Docs list Streamable HTTP (http) transport.
+    provenance: manual
+    last_verified: 2026-07-01
+  transport.sse:
+    status: yes
+    source: https://code.visualstudio.com/api/extension-guides/ai/mcp
+    notes: Docs list SSE as legacy-supported transport.
+    provenance: manual
+    last_verified: 2026-07-01
+  tools.annotations:
+    status: yes
+    source: https://code.visualstudio.com/api/extension-guides/ai/mcp
+    notes: Supports tool annotations (title, readOnlyHint).
+    provenance: manual
+    last_verified: 2026-07-01
+  resources.templates:
+    status: yes
+    source: https://code.visualstudio.com/api/extension-guides/ai/mcp
+    notes: Supports resource templates with input parameters.
+    provenance: manual
+    last_verified: 2026-07-01
+  resources.subscribe:
+    status: yes
+    source: https://code.visualstudio.com/api/extension-guides/ai/mcp
+    notes: Supports resource updates in real-time.
+    provenance: manual
+    last_verified: 2026-07-01
+  prompts.arguments:
+    status: yes
+    source: https://code.visualstudio.com/api/extension-guides/ai/mcp
+    notes: Prompt input arguments collected via a dialog.
+    provenance: manual
+    last_verified: 2026-07-01
+  auth.oauth:
+    status: yes
+    source: https://code.visualstudio.com/api/extension-guides/ai/mcp
+    notes: Authorization via OAuth 2.1 (and 2.0) standards.
+    provenance: manual
+    last_verified: 2026-07-01

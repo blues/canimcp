@@ -1,5 +1,3 @@
-# Seed-imported from apify/mcp-client-capabilities (Apache-2.0).
-# Coarse data — sub-features left `unknown`. Review & source before promoting.
 id: goose
 title: Goose
 url: https://block.github.io/goose
@@ -9,14 +7,16 @@ usage_rank: 9
 support:
   tools.call:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://block.github.io/goose/docs/getting-started/using-extensions/
+    notes: Goose runs the JSON-formatted tool call and gathers results.
+    provenance: manual
+    last_verified: 2026-07-01
   tools.list:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://block.github.io/goose/docs/getting-started/using-extensions/
+    notes: Extensions expose functionality through tools.
+    provenance: manual
+    last_verified: 2026-07-01
   resources.read:
     status: yes
     provenance: apify
@@ -37,3 +37,27 @@ support:
     provenance: apify
     source: https://github.com/apify/mcp-client-capabilities
     last_verified: 2026-02-02
+  transport.stdio:
+    status: yes
+    source: https://block.github.io/goose/docs/getting-started/using-extensions/
+    notes: Command-Line Extension runs a local command/script.
+    provenance: manual
+    last_verified: 2026-07-01
+  transport.streamable_http:
+    status: yes
+    source: https://block.github.io/goose/docs/getting-started/using-extensions/
+    notes: Remote Extension connects via Streamable HTTP.
+    provenance: manual
+    last_verified: 2026-07-01
+  roots.list:
+    status: yes
+    source: https://block.github.io/goose/docs/getting-started/using-extensions/
+    notes: Supports MCP Roots (session working directory).
+    provenance: manual
+    last_verified: 2026-07-01
+  auth.oauth:
+    status: yes
+    source: https://goose-docs.ai/docs/mcp/square-mcp/
+    notes: Connects to remote servers that use OAuth (e.g. Square).
+    provenance: manual
+    last_verified: 2026-07-01

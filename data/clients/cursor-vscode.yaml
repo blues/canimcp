@@ -1,5 +1,3 @@
-# Seed-imported from apify/mcp-client-capabilities (Apache-2.0).
-# Coarse data — sub-features left `unknown`. Review & source before promoting.
 id: cursor-vscode
 title: Cursor
 url: https://cursor.com
@@ -9,14 +7,16 @@ usage_rank: 4
 support:
   tools.call:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://cursor.com/docs/mcp
+    notes: "Tools: Supported (functions for the model to execute)."
+    provenance: manual
+    last_verified: 2026-07-01
   tools.list:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://cursor.com/docs/mcp
+    notes: Tools listed as Supported in protocol support table.
+    provenance: manual
+    last_verified: 2026-07-01
   tools.listChanged:
     status: yes
     provenance: apify
@@ -24,9 +24,10 @@ support:
     last_verified: 2026-02-02
   resources.read:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://cursor.com/docs/mcp
+    notes: "Resources: Supported (structured data sources)."
+    provenance: manual
+    last_verified: 2026-07-01
   resources.list:
     status: yes
     provenance: apify
@@ -34,9 +35,10 @@ support:
     last_verified: 2026-02-02
   prompts.get:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://cursor.com/docs/mcp
+    notes: "Prompts: Supported (templated messages/workflows)."
+    provenance: manual
+    last_verified: 2026-07-01
   prompts.list:
     status: yes
     provenance: apify
@@ -44,11 +46,37 @@ support:
     last_verified: 2026-02-02
   roots.list:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://cursor.com/docs/mcp
+    notes: "Roots: Supported (URI/filesystem boundary inquiries)."
+    provenance: manual
+    last_verified: 2026-07-01
   elicitation.create:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://cursor.com/docs/mcp
+    notes: "Elicitation: Supported (server-initiated user requests)."
+    provenance: manual
+    last_verified: 2026-07-01
+  transport.stdio:
+    status: yes
+    source: https://cursor.com/docs/mcp
+    notes: Supports stdio (local) transport.
+    provenance: manual
+    last_verified: 2026-07-01
+  transport.sse:
+    status: yes
+    source: https://cursor.com/docs/mcp
+    notes: Supports SSE (local/remote) transport.
+    provenance: manual
+    last_verified: 2026-07-01
+  transport.streamable_http:
+    status: yes
+    source: https://cursor.com/docs/mcp
+    notes: Supports Streamable HTTP (local/remote) transport.
+    provenance: manual
+    last_verified: 2026-07-01
+  auth.oauth:
+    status: yes
+    source: https://cursor.com/docs/mcp
+    notes: OAuth used to authenticate remote (SSE/HTTP) servers.
+    provenance: manual
+    last_verified: 2026-07-01

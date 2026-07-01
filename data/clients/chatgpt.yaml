@@ -1,5 +1,3 @@
-# Seed-imported from apify/mcp-client-capabilities (Apache-2.0).
-# Coarse data — sub-features left `unknown`. Review & source before promoting.
 id: chatgpt
 title: ChatGPT
 url: https://chatgpt.com
@@ -9,11 +7,31 @@ usage_rank: 5
 support:
   tools.call:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt
+    notes: Use tools exposed by the app, including write actions.
+    provenance: manual
+    last_verified: 2026-07-01
   tools.list:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt
+    notes: Scan Tools discovers the server’s tools.
+    provenance: manual
+    last_verified: 2026-07-01
+  transport.stdio:
+    status: no
+    source: https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt
+    notes: Cannot connect to a local MCP server directly.
+    provenance: manual
+    last_verified: 2026-07-01
+  transport.streamable_http:
+    status: yes
+    source: https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt
+    notes: ChatGPT connects to remote MCP servers.
+    provenance: manual
+    last_verified: 2026-07-01
+  auth.oauth:
+    status: yes
+    source: https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt
+    notes: Supports OAuth/OpenID Connect for server authentication.
+    provenance: manual
+    last_verified: 2026-07-01

@@ -1,5 +1,3 @@
-# Seed-imported from apify/mcp-client-capabilities (Apache-2.0).
-# Coarse data — sub-features left `unknown`. Review & source before promoting.
 id: claude-ai
 title: Claude.ai
 url: https://claude.ai
@@ -9,9 +7,10 @@ usage_rank: 1
 support:
   tools.call:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://modelcontextprotocol.io/docs/develop/connect-local-servers
+    notes: Each server exposes tools Claude can use, with approval.
+    provenance: manual
+    last_verified: 2026-07-01
   tools.list:
     status: yes
     provenance: apify
@@ -19,9 +18,10 @@ support:
     last_verified: 2026-02-02
   resources.read:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://modelcontextprotocol.io/docs/develop/connect-remote-servers
+    notes: Connected server's resources become available in conversations.
+    provenance: manual
+    last_verified: 2026-07-01
   resources.list:
     status: yes
     provenance: apify
@@ -29,11 +29,24 @@ support:
     last_verified: 2026-02-02
   prompts.get:
     status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    source: https://modelcontextprotocol.io/docs/develop/connect-remote-servers
+    notes: Connected server’s prompts become available in conversations.
+    provenance: manual
+    last_verified: 2026-07-01
   prompts.list:
     status: yes
     provenance: apify
     source: https://github.com/apify/mcp-client-capabilities
     last_verified: 2026-02-02
+  transport.stdio:
+    status: yes
+    source: https://modelcontextprotocol.io/docs/develop/connect-local-servers
+    notes: Claude Desktop runs local servers via command/args config.
+    provenance: manual
+    last_verified: 2026-07-01
+  auth.oauth:
+    status: yes
+    source: https://modelcontextprotocol.io/docs/develop/connect-remote-servers
+    notes: Custom Connectors authenticate to remote servers (commonly OAuth).
+    provenance: manual
+    last_verified: 2026-07-01
