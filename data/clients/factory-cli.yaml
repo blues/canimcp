@@ -1,0 +1,8 @@
+# Seed-imported from apify/mcp-client-capabilities (Apache-2.0).
+# Coarse data — sub-features left `unknown`. Review & source before promoting.
+id: factory-cli
+title: Factory CLI
+url: https://github.com/factory-ai/factory-cli
+clientInfo_name: factory-cli
+protocolVersion: 2025-06-18
+usage_rank: null

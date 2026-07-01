@@ -1,0 +1,39 @@
+# Seed-imported from apify/mcp-client-capabilities (Apache-2.0).
+# Coarse data — sub-features left `unknown`. Review & source before promoting.
+id: claude-ai
+title: Claude.ai
+url: https://claude.ai
+clientInfo_name: claude-ai
+protocolVersion: 2025-06-18
+usage_rank: null
+support:
+  tools.call:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02
+  tools.list:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02
+  resources.read:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02
+  resources.list:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02
+  prompts.get:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02
+  prompts.list:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02

@@ -1,0 +1,34 @@
+# Seed-imported from apify/mcp-client-capabilities (Apache-2.0).
+# Coarse data — sub-features left `unknown`. Review & source before promoting.
+id: kilo-code
+title: Kilo Code
+url: https://github.com/Kilo-Org/kilocode
+clientInfo_name: Kilo-Code
+protocolVersion: 2025-06-18
+usage_rank: null
+support:
+  tools.call:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02
+  tools.list:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02
+  tools.listChanged:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02
+  resources.read:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02
+  resources.list:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02

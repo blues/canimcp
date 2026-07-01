@@ -1,0 +1,29 @@
+# Seed-imported from apify/mcp-client-capabilities (Apache-2.0).
+# Coarse data — sub-features left `unknown`. Review & source before promoting.
+id: mistral
+title: "Mistral AI: Le Chat"
+url: https://chat.mistral.ai
+clientInfo_name: Mistral
+protocolVersion: 2025-06-18
+usage_rank: null
+support:
+  sampling.createMessage:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02
+  roots.list:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02
+  roots.listChanged:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02
+  elicitation.create:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02

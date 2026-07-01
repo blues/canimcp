@@ -1,0 +1,29 @@
+# Seed-imported from apify/mcp-client-capabilities (Apache-2.0).
+# Coarse data — sub-features left `unknown`. Review & source before promoting.
+id: antigravity-client
+title: Google Antigravity
+url: https://antigravity.google
+clientInfo_name: antigravity-client
+protocolVersion: 2025-06-18
+usage_rank: null
+support:
+  tools.call:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02
+  tools.list:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02
+  roots.list:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02
+  roots.listChanged:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02

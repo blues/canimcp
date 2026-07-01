@@ -1,0 +1,17 @@
+canimcp — MCP Client Compatibility Matrix
+Copyright (c) 2026 Blues Inc. and canimcp contributors
+
+This product includes seed data imported from:
+
+  apify/mcp-client-capabilities
+  https://github.com/apify/mcp-client-capabilities
+  Licensed under the Apache License, Version 2.0.
+
+Apify-derived capability records are marked with `provenance: apify` and a
+per-record `source` field pointing back to the upstream dataset. The mapping
+from Apify's capability-presence schema to canimcp's per-sub-feature taxonomy
+is conservative: only directly-attested capabilities are recorded; everything
+else is left `unknown`.
+
+canimcp code is licensed under the MIT License (see LICENSE).
+canimcp data is licensed under CC-BY 4.0 (see LICENSE-data).

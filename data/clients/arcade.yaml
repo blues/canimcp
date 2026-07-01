@@ -1,0 +1,14 @@
+# Seed-imported from apify/mcp-client-capabilities (Apache-2.0).
+# Coarse data — sub-features left `unknown`. Review & source before promoting.
+id: arcade
+title: Arcade
+url: https://arcade.dev
+clientInfo_name: arcade
+protocolVersion: 2025-06-18
+usage_rank: null
+support:
+  elicitation.create:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02
