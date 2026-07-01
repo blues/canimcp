@@ -1,0 +1,62 @@
+spec_version: "2025-06-18"
+categories:
+  - id: core
+    title: Core Protocol
+    features:
+      - id: initialization
+        title: Initialization & capability negotiation
+        spec_url: https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle
+  - id: transports
+    title: Transports
+    features:
+      - { id: transport.stdio,            title: stdio }
+      - { id: transport.sse,              title: HTTP + SSE (legacy) }
+      - { id: transport.streamable_http,  title: Streamable HTTP }
+  - id: tools
+    title: Tools
+    features:
+      - { id: tools.call,        title: Call tools }
+      - { id: tools.list,        title: List tools }
+      - { id: tools.listChanged, title: list_changed notifications }
+      - { id: tools.annotations, title: Tool annotations }
+  - id: resources
+    title: Resources
+    features:
+      - { id: resources.read,        title: Read resources }
+      - { id: resources.list,        title: List resources }
+      - { id: resources.templates,   title: Resource templates }
+      - { id: resources.subscribe,   title: Subscribe to updates }
+      - { id: resources.listChanged, title: list_changed notifications }
+  - id: prompts
+    title: Prompts
+    features:
+      - { id: prompts.get,         title: Get prompts }
+      - { id: prompts.list,        title: List prompts }
+      - { id: prompts.arguments,   title: Prompt arguments }
+      - { id: prompts.listChanged, title: list_changed notifications }
+  - id: sampling
+    title: Sampling
+    features:
+      - { id: sampling.createMessage, title: createMessage }
+  - id: roots
+    title: Roots
+    features:
+      - { id: roots.list,        title: List roots }
+      - { id: roots.listChanged, title: list_changed notifications }
+  - id: elicitation
+    title: Elicitation
+    features:
+      - { id: elicitation.create, title: Elicit user input }
+  - id: completions
+    title: Completions
+    features:
+      - { id: completions.argument, title: Argument autocompletion }
+  - id: logging
+    title: Logging
+    features:
+      - { id: logging.setLevel, title: Set level }
+      - { id: logging.message,  title: Receive log messages }
+  - id: auth
+    title: Authorization
+    features:
+      - { id: auth.oauth, title: OAuth 2.1 client }
