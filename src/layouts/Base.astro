@@ -15,15 +15,19 @@ interface Props {
   description?: string;
   /** Spec version rendered in the header badge (e.g. "2025-06-18"). */
   specVersion?: string;
+  /** ISO build timestamp from the bundle (`generated_at`), shown in footer. */
+  generatedAt?: string;
 }
 
 const {
   title = 'canimcp — MCP Client Compatibility Matrix',
   description = 'A caniuse-style compatibility matrix showing which MCP features each major MCP client supports.',
   specVersion,
+  generatedAt,
 } = Astro.props;
 
 import '../styles/global.css';
+import Footer from '../components/Footer.astro';
 ---
 
 <!doctype html>
@@ -69,5 +73,6 @@ import '../styles/global.css';
     </main>
 
     <!-- footer slot: legend & Blues footer added in Task 2.7 -->
+    <Footer specVersion={specVersion} generatedAt={generatedAt} />
   </body>
 </html>

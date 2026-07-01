@@ -1,0 +1,87 @@
+---
+/**
+ * Site-wide footer: legend, spec-version badge, "last updated", the
+ * **Built by Blues** attribution (per Blues trademark guidelines — logo shown
+ * unmodified, links to blues.com), and project/legal links.
+ *
+ * Props let pages pass through the spec version and the bundle's build time.
+ */
+import Legend from './Legend.tsx';
+
+interface Props {
+  specVersion?: string;
+  /** ISO timestamp from the compiled bundle (`generated_at`). */
+  generatedAt?: string;
+}
+
+const { specVersion, generatedAt } = Astro.props;
+
+const lastUpdated = generatedAt
+  ? new Date(generatedAt).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    })
+  : null;
+
+const REPO_URL = 'https://github.com/blues/canimcp';
+const SEP_URL = 'https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1814';
+---
+
+<footer
+  class="mt-12 border-t border-gray-200 bg-gray-50 px-4 py-8 text-sm sm:px-6 dark:border-gray-800 dark:bg-gray-900"
+>
+  <div class="mx-auto flex max-w-6xl flex-col gap-6">
+    <section aria-label="Legend">
+      <h2 class="mb-2 text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
+        Legend
+      </h2>
+      <Legend />
+    </section>
+
+    <div class="flex flex-col gap-4 border-t border-gray-200 pt-6 sm:flex-row sm:items-center sm:justify-between dark:border-gray-800">
+      <!-- Built by Blues attribution. Logo displayed unmodified per Blues
+           trademark guidelines; falls back to a text wordmark if the asset
+           is absent so the footer never breaks. -->
+      <a
+        href="https://blues.com"
+        class="group inline-flex items-center gap-2 font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
+        rel="noopener"
+      >
+        <img
+          src="/blues-logo.svg"
+          alt="Blues"
+          width="72"
+          height="24"
+          class="h-6 w-auto dark:hidden"
+          onerror="this.remove()"
+        />
+        <img
+          src="/blues-logo-light.svg"
+          alt="Blues"
+          width="72"
+          height="24"
+          class="hidden h-6 w-auto dark:block"
+          onerror="this.remove()"
+        />
+        <span>Built by Blues</span>
+      </a>
+
+      <nav
+        class="flex flex-wrap items-center gap-x-4 gap-y-1 text-gray-600 dark:text-gray-400"
+        aria-label="Footer links"
+      >
+        <a href={REPO_URL} class="hover:underline" rel="noopener">GitHub</a>
+        <a href={SEP_URL} class="hover:underline" rel="noopener">SEP-1814</a>
+        <a href={`${REPO_URL}/blob/main/LICENSE`} class="hover:underline" rel="noopener">
+          MIT (code)
+        </a>
+        <a href={`${REPO_URL}/blob/main/LICENSE-data`} class="hover:underline" rel="noopener">
+          CC-BY (data)
+        </a>
+        {specVersion && <span>spec {specVersion}</span>}
+        {lastUpdated && <span>Updated {lastUpdated}</span>}
+      </nav>
+    </div>
+  </div>
+</footer>
