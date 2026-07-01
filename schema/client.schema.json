@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://canimcp.dev/schema/client.schema.json",
+  "title": "canimcp client capability record",
+  "type": "object",
+  "required": ["id", "title", "url"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "description": "Stable slug; maps to clientInfo.name where possible."
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "vendor": { "type": "string" },
+    "url": { "type": "string", "format": "uri" },
+    "clientInfo_name": {
+      "type": "string",
+      "description": "params.clientInfo.name from initialize (for matching)."
+    },
+    "platforms": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["macos", "windows", "linux", "web", "ios", "android"]
+      }
+    },
+    "protocolVersion": { "type": "string" },
+    "usage_rank": { "type": ["integer", "null"], "minimum": 1 },
+    "install_docs_url": { "type": "string", "format": "uri" },
+    "support": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/cell" }
+    }
+  },
+  "definitions": {
+    "cell": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["yes", "partial", "no", "unknown"]
+        },
+        "notes": { "type": "string" },
+        "source": { "type": "string", "format": "uri" },
+        "last_verified": { "type": "string", "format": "date" },
+        "version_tested": { "type": "string" },
+        "provenance": {
+          "type": "string",
+          "enum": ["manual", "conformance", "apify", "submission"]
+        }
+      }
+    }
+  }
+}
