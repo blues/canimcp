@@ -1,22 +1,22 @@
-spec_version: "2025-06-18"
+spec_version: "2025-11-25"
 categories:
   - id: core
     title: Core Protocol
-    spec_url: https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle
+    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle
     features:
       - id: initialization
         title: Initialization & capability negotiation
-        spec_url: https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle
+        spec_url: https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle
   - id: transports
     title: Transports
-    spec_url: https://modelcontextprotocol.io/specification/2025-06-18/basic/transports
+    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/basic/transports
     features:
       - { id: transport.stdio,            title: stdio }
       - { id: transport.sse,              title: HTTP + SSE (legacy) }
       - { id: transport.streamable_http,  title: Streamable HTTP }
   - id: tools
     title: Tools
-    spec_url: https://modelcontextprotocol.io/specification/2025-06-18/server/tools
+    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/server/tools
     features:
       - { id: tools.call,        title: Call tools }
       - { id: tools.list,        title: List tools }
@@ -24,7 +24,7 @@ categories:
       - { id: tools.annotations, title: Tool annotations }
   - id: resources
     title: Resources
-    spec_url: https://modelcontextprotocol.io/specification/2025-06-18/server/resources
+    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/server/resources
     features:
       - { id: resources.read,        title: Read resources }
       - { id: resources.list,        title: List resources }
@@ -33,7 +33,7 @@ categories:
       - { id: resources.listChanged, title: list_changed notifications }
   - id: prompts
     title: Prompts
-    spec_url: https://modelcontextprotocol.io/specification/2025-06-18/server/prompts
+    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/server/prompts
     features:
       - { id: prompts.get,         title: Get prompts }
       - { id: prompts.list,        title: List prompts }
@@ -41,33 +41,44 @@ categories:
       - { id: prompts.listChanged, title: list_changed notifications }
   - id: sampling
     title: Sampling
-    spec_url: https://modelcontextprotocol.io/specification/2025-06-18/client/sampling
+    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/client/sampling
     features:
       - { id: sampling.createMessage, title: createMessage }
+      - { id: sampling.tools,         title: Tool calling in sampling }
   - id: roots
     title: Roots
-    spec_url: https://modelcontextprotocol.io/specification/2025-06-18/client/roots
+    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/client/roots
     features:
       - { id: roots.list,        title: List roots }
       - { id: roots.listChanged, title: list_changed notifications }
   - id: elicitation
     title: Elicitation
-    spec_url: https://modelcontextprotocol.io/specification/2025-06-18/client/elicitation
+    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/client/elicitation
     features:
-      - { id: elicitation.create, title: Elicit user input }
+      - { id: elicitation.create, title: Elicit user input (form mode) }
+      - { id: elicitation.url,    title: URL mode elicitation }
+  - id: tasks
+    title: Tasks (experimental)
+    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/basic/utilities/tasks
+    features:
+      - { id: tasks.list,        title: tasks/list }
+      - { id: tasks.cancel,      title: tasks/cancel }
+      - { id: tasks.sampling,    title: Task-augmented sampling/createMessage }
+      - { id: tasks.elicitation, title: Task-augmented elicitation/create }
   - id: completions
     title: Completions
-    spec_url: https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/completion
+    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/server/utilities/completion
     features:
       - { id: completions.argument, title: Argument autocompletion }
   - id: logging
     title: Logging
-    spec_url: https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/logging
+    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/server/utilities/logging
     features:
       - { id: logging.setLevel, title: Set level }
       - { id: logging.message,  title: Receive log messages }
   - id: auth
     title: Authorization
-    spec_url: https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization
+    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization
     features:
-      - { id: auth.oauth, title: OAuth 2.1 client }
+      - { id: auth.oauth,                title: OAuth 2.1 client }
+      - { id: auth.client_id_metadata,   title: OAuth Client ID Metadata Documents }

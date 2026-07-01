@@ -38,6 +38,6 @@ describe('buildMatrix', () => {
 
   it('carries the spec version through', () => {
     const bundle = buildMatrix([], taxonomy);
-    expect(bundle.spec_version).toBe('2025-06-18');
+    expect(bundle.spec_version).toBe('2025-11-25');
   });
 });
