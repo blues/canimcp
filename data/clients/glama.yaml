@@ -52,3 +52,8 @@ support:
     provenance: apify
     source: https://github.com/apify/mcp-client-capabilities
     last_verified: 2026-02-02
+  elicitation.url:
+    status: yes
+    provenance: apify
+    source: https://github.com/apify/mcp-client-capabilities
+    last_verified: 2026-02-02

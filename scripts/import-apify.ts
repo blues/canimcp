@@ -76,10 +76,17 @@ function mapSupport(client: ApifyClient): Record<string, ReturnType<typeof cell>
   }
   if (has('elicitation')) {
     support['elicitation.create'] = cell();
+    // Explicit `elicitation.url` sub-key ⇒ URL-mode elicitation (2025-11-25).
+    // A bare `elicitation: {}` is form-mode only (spec backcompat) and says
+    // nothing about URL mode, so we only map when the key is explicitly present.
+    if (nested('elicitation', 'url')) support['elicitation.url'] = cell();
   }
-  // NOTE: Apify has no data for transports, auth, completions, logging,
-  // prompts.arguments/listChanged, resources.templates, tool annotations —
-  // these are intentionally left `unknown`. `tasks` is not in our taxonomy.
+  // NOTE: Apify has no mappable data for transports, auth, completions,
+  // logging, prompts.arguments/listChanged, resources.templates, tool
+  // annotations, sampling.tools — left `unknown`. Apify's `tasks` key encodes
+  // SERVER-side task capabilities (`tasks.requests.tools.call`), which do NOT
+  // map to our CLIENT-side `tasks.*` features (sampling/elicitation/list/cancel),
+  // so tasks are intentionally not imported.
   return support;
 }
 
