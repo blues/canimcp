@@ -1,0 +1,32 @@
+{
+  "run_url": "https://github.com/blues/canimcp/actions/runs/1234567890",
+  "run_date": "2026-06-28",
+  "spec_version": "2025-06-18",
+  "results": [
+    {
+      "clientInfo_name": "cursor-vscode",
+      "version": "0.47",
+      "features": [
+        { "feature_id": "tools.call", "outcome": "pass" },
+        { "feature_id": "tools.list", "outcome": "pass" },
+        { "feature_id": "tools.listChanged", "outcome": "fail" },
+        { "feature_id": "resources.subscribe", "outcome": "skip" },
+        {
+          "feature_id": "sampling.createMessage",
+          "outcome": "fail",
+          "notes": "createMessage handler not implemented as of this run."
+        },
+        { "feature_id": "elicitation.create", "outcome": "pass" }
+      ]
+    },
+    {
+      "clientInfo_name": "goose",
+      "version": "1.2.0",
+      "features": [
+        { "feature_id": "tools.call", "outcome": "pass" },
+        { "feature_id": "roots.list", "outcome": "pass" },
+        { "feature_id": "auth.oauth", "outcome": "skip" }
+      ]
+    }
+  ]
+}

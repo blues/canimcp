@@ -1,0 +1,91 @@
+name: Conformance ingestion
+
+# Ingest an MCP conformance-test report (SEP-1627, interim adapter) into the
+# canonical client YAML and open a validated auto-PR. See docs/conformance-format.md.
+#
+# Triggers:
+#   - schedule: nightly, to re-ingest the latest available report.
+#   - workflow_dispatch: manual run; optional `report_path` input.
+#   - repository_dispatch (type: conformance-report): fired by an upstream
+#     SEP-1627 run; the report location can be passed in client_payload.
+#
+# The ingester + build step are the quality gate. A human maintainer reviews and
+# merges the PR; any `[review needed]` conflicts against manual/submission cells
+# are printed to the job log for manual resolution (they are never auto-applied).
+
+on:
+  schedule:
+    # 03:17 UTC nightly (off the top of the hour to avoid GH cron congestion).
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+    inputs:
+      report_path:
+        description: 'Path to a conformance report JSON in the repo (defaults to the bundled sample).'
+        required: false
+        default: 'tests/fixtures/sample-conformance-report.json'
+  repository_dispatch:
+    types: [conformance-report]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  ingest-conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Resolve report path
+        id: report
+        env:
+          # Precedence: workflow_dispatch input > repository_dispatch payload > default sample.
+          DISPATCH_PATH: ${{ github.event.inputs.report_path }}
+          PAYLOAD_PATH: ${{ github.event.client_payload.report_path }}
+        run: |
+          REPORT="${DISPATCH_PATH:-${PAYLOAD_PATH:-tests/fixtures/sample-conformance-report.json}}"
+          echo "path=$REPORT" >> "$GITHUB_OUTPUT"
+          echo "Using conformance report: $REPORT"
+
+      - name: Run conformance ingester
+        run: npx tsx scripts/ingest-conformance.ts "${{ steps.report.outputs.path }}"
+
+      - name: Validate + build the matrix
+        run: npx tsx scripts/build-data.ts
+
+      - name: Open pull request
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: ingest/conformance-${{ github.run_id }}
+          base: main
+          commit-message: >
+            data(conformance): ingest report ${{ steps.report.outputs.path }} (run ${{ github.run_id }})
+          title: >
+            data(conformance): ingest conformance report (run ${{ github.run_id }})
+          body: |
+            Automated PR from the conformance ingestion workflow (SEP-1627, interim adapter).
+
+            - Report: `${{ steps.report.outputs.path }}`
+            - Provenance: `conformance`
+            - Trigger: `${{ github.event_name }}`
+
+            Conformance data overwrites `apify`/unset/prior-conformance cells. Any
+            conflicts against human-owned (`manual`/`submission`) cells were **not**
+            applied — check the ingester step logs for `[review needed]` lines and
+            resolve those by hand.
+
+            A maintainer should review the diff and merge if it looks correct. See
+            `docs/conformance-format.md` for the contract.
+          labels: data:conformance
+          delete-branch: true

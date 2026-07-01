@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://canimcp.dev/schema/conformance-report.schema.json",
+  "title": "canimcp interim MCP conformance report",
+  "description": "Interim conformance-run report shape consumed by scripts/ingest-conformance.ts. Loosely tracks SEP-1627; SEP-1627's own output format may still be in flux, so this is our own interim adapter shape. See docs/conformance-format.md.",
+  "type": "object",
+  "required": ["run_date", "spec_version", "results"],
+  "additionalProperties": false,
+  "properties": {
+    "run_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL of the conformance run / artifact. Recorded on each produced cell as `source`."
+    },
+    "run_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the run executed (YYYY-MM-DD). Recorded on each produced cell as `last_verified`."
+    },
+    "spec_version": {
+      "type": "string",
+      "description": "MCP spec version the run tested against (e.g. 2025-06-18)."
+    },
+    "results": {
+      "type": "array",
+      "description": "One entry per client tested in this run.",
+      "items": { "$ref": "#/definitions/result" }
+    }
+  },
+  "definitions": {
+    "result": {
+      "type": "object",
+      "required": ["clientInfo_name", "features"],
+      "additionalProperties": false,
+      "properties": {
+        "clientInfo_name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "params.clientInfo.name reported by the client under test; used to match a data/clients/<id>.yaml record."
+        },
+        "version": {
+          "type": "string",
+          "description": "Client version string under test. Recorded on each produced cell as `version_tested`."
+        },
+        "features": {
+          "type": "array",
+          "description": "Per-feature outcomes for this client.",
+          "items": { "$ref": "#/definitions/featureResult" }
+        }
+      }
+    },
+    "featureResult": {
+      "type": "object",
+      "required": ["feature_id", "outcome"],
+      "additionalProperties": false,
+      "properties": {
+        "feature_id": {
+          "type": "string",
+          "description": "A canimcp feature id from data/features.yaml (e.g. tools.call). Unknown ids are rejected by the ingester."
+        },
+        "outcome": {
+          "type": "string",
+          "enum": ["pass", "fail", "skip"],
+          "description": "pass => status:yes, fail => status:no, skip => leave cell untouched/unknown."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Optional free-text detail carried onto the cell's `notes`."
+        }
+      }
+    }
+  }
+}
