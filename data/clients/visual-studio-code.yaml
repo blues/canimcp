@@ -116,3 +116,15 @@ support:
     notes: Authorization via OAuth 2.1 (and 2.0) standards.
     provenance: manual
     last_verified: 2026-07-01
+  elicitation.url:
+    status: yes
+    source: https://code.visualstudio.com/updates/v1_107
+    notes: v1.107 supports MCP 2025-11-25 incl. URL mode elicitation.
+    provenance: manual
+    last_verified: 2026-07-01
+  auth.client_id_metadata:
+    status: yes
+    source: https://code.visualstudio.com/updates/v1_107
+    notes: Supports the Client ID Metadata Document authentication flow.
+    provenance: manual
+    last_verified: 2026-07-01

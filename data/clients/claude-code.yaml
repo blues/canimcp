@@ -88,3 +88,16 @@ support:
     notes: Authenticate with remote servers requiring OAuth 2.0.
     provenance: manual
     last_verified: 2026-07-01
+  elicitation.url:
+    status: yes
+    source: https://code.claude.com/docs/en/mcp
+    notes: "URL mode: opens a browser URL for authentication or approval."
+    provenance: manual
+    last_verified: 2026-07-01
+  auth.client_id_metadata:
+    status: yes
+    source: https://code.claude.com/docs/en/mcp
+    notes: Supports servers using a Client ID Metadata Document (CIMD);
+      auto-discovered.
+    provenance: manual
+    last_verified: 2026-07-01

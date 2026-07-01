@@ -56,6 +56,17 @@ const DATA: Record<string, Record<string, Cell>> = {
     'roots.list': c('yes', VSC, "Provides the server with the user's workspace root folder(s)."),
     'elicitation.create': c('yes', VSC, 'Elicitation: request input from the user.'),
     'auth.oauth': c('yes', VSC, 'Authorization via OAuth 2.1 (and 2.0) standards.'),
+    // 2025-11-25 features (VS Code 1.107 release notes).
+    'elicitation.url': c(
+      'yes',
+      'https://code.visualstudio.com/updates/v1_107',
+      'v1.107 supports MCP 2025-11-25 incl. URL mode elicitation.',
+    ),
+    'auth.client_id_metadata': c(
+      'yes',
+      'https://code.visualstudio.com/updates/v1_107',
+      'Supports the Client ID Metadata Document authentication flow.',
+    ),
   },
   'claude-code': {
     'transport.stdio': c('yes', CC, 'Stdio servers run as local processes.'),
@@ -71,6 +82,17 @@ const DATA: Record<string, Record<string, Cell>> = {
     'resources.listChanged': c('yes', CC, 'Supports list_changed notifications for resources.'),
     'roots.list': c('yes', CC, 'Server can call roots/list; returns launch directory.'),
     'auth.oauth': c('yes', CC, 'Authenticate with remote servers requiring OAuth 2.0.'),
+    // 2025-11-25 features (Claude Code MCP docs).
+    'elicitation.url': c(
+      'yes',
+      CC,
+      'URL mode: opens a browser URL for authentication or approval.',
+    ),
+    'auth.client_id_metadata': c(
+      'yes',
+      CC,
+      'Supports servers using a Client ID Metadata Document (CIMD); auto-discovered.',
+    ),
   },
   'cursor-vscode': {
     'transport.stdio': c('yes', CUR, 'Supports stdio (local) transport.'),
