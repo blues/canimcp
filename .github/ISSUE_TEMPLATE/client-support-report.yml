@@ -1,0 +1,105 @@
+name: Client support report
+description: Report or correct a single support state for an MCP client (auto-opens a PR).
+title: "[submission]: <client> — <feature>"
+labels: ["submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for improving the matrix! This form maps 1:1 to a client's YAML
+        support cell. On submit, a bot parses it, validates it against the
+        feature taxonomy + schema, and opens a pull request linked back to this
+        issue. A human maintainer reviews and merges.
+
+        **Sourcing requirement:** every non-`unknown` report needs a real
+        `Source URL` — official docs, a changelog, or a **screen-recording**
+        link for UI-only clients you can't test programmatically.
+
+  - type: input
+    id: client_id
+    attributes:
+      label: Client ID
+      description: >
+        Stable lowercase slug (e.g. `cursor`, `claude-code`). If the client
+        already exists in `data/clients/`, use its existing id so your report
+        merges in. Allowed: lowercase letters, digits, `.`, `_`, `-`.
+      placeholder: acme-client
+    validations:
+      required: true
+
+  - type: input
+    id: title
+    attributes:
+      label: Client name
+      description: Human-readable display name.
+      placeholder: Acme Client
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: Client URL
+      description: Homepage or MCP docs URL for the client.
+      placeholder: https://acme.example/docs/mcp
+    validations:
+      required: true
+
+  - type: textarea
+    id: feature_ids
+    attributes:
+      label: Feature IDs
+      description: >
+        One or more feature ids from `data/features.yaml`, comma- or
+        newline-separated (e.g. `tools.call`, `resources.subscribe`). All listed
+        features get the status + source below. Unknown ids are rejected with a
+        helpful message.
+      placeholder: |
+        tools.call
+        resources.subscribe
+    validations:
+      required: true
+
+  - type: dropdown
+    id: status
+    attributes:
+      label: Support status
+      description: The support state for the feature(s) above.
+      options:
+        - "yes"
+        - partial
+        - "no"
+        - unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: >
+        Optional. Nuance, caveats, or partial-support detail
+        (e.g. "reads resources but does not honor subscribe notifications").
+    validations:
+      required: false
+
+  - type: input
+    id: source
+    attributes:
+      label: Source URL
+      description: >
+        Evidence for this report — official docs, changelog, or a
+        **screen-recording** link for UI-only clients. Required for any
+        `yes`/`partial`/`no` report.
+      placeholder: https://acme.example/evidence
+    validations:
+      required: false
+
+  - type: input
+    id: version_tested
+    attributes:
+      label: Version tested
+      description: Optional. Client version you observed this behaviour in.
+      placeholder: "1.2.3"
+    validations:
+      required: false

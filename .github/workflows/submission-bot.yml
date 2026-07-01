@@ -1,0 +1,98 @@
+name: Submission bot
+
+# Turn a community "Client support report" issue into a validated auto-PR.
+# Triggered when the `submission` label lands on an issue, or when a maintainer
+# comments `/submit` on one. The parser + build step are the quality gate; a
+# human still reviews and merges the PR the bot opens.
+
+on:
+  issues:
+    types: [labeled]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  submission-to-pr:
+    # Run when the `submission` label is applied, or on a `/submit` comment on
+    # an issue (not a PR).
+    if: >
+      (github.event_name == 'issues' && github.event.label.name == 'submission') ||
+      (github.event_name == 'issue_comment' &&
+       !github.event.issue.pull_request &&
+       startsWith(github.event.comment.body, '/submit'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Parse submission into a client YAML patch
+        id: parse
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: npx tsx scripts/submission-to-patch.ts
+
+      - name: Validate + build the matrix
+        run: npx tsx scripts/build-data.ts
+
+      - name: Open pull request
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: submission/issue-${{ github.event.issue.number }}
+          base: main
+          commit-message: >
+            data(submission): apply report from issue #${{ github.event.issue.number }}
+          title: >
+            data(submission): report from issue #${{ github.event.issue.number }}
+          body: |
+            Automated PR from the community submission bot.
+
+            Closes #${{ github.event.issue.number }}
+
+            - Source: issue #${{ github.event.issue.number }}
+            - Provenance: `submission`
+
+            A maintainer should review the diff and merge if the sourcing checks out.
+          labels: submission
+
+      - name: Comment success on the issue
+        if: success() && steps.cpr.outputs.pull-request-number
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            ✅ Thanks! Your report validated and I opened a pull request:
+            #${{ steps.cpr.outputs.pull-request-number }}
+
+            A maintainer will review and merge it. Track it here:
+            ${{ steps.cpr.outputs.pull-request-url }}
+
+      - name: Comment failure on the issue
+        if: failure()
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            ❌ Sorry, I couldn't process this submission automatically.
+
+            The parser or validation step failed — most likely an unknown
+            feature id, an invalid status, a missing required field, or a
+            missing `Source URL` for a non-`unknown` report.
+
+            Check the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            for the exact error, fix the issue form, and re-apply the
+            `submission` label (or comment `/submit`) to retry.
