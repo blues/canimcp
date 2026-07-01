@@ -5,7 +5,7 @@ title: Continue CLI Client
 url: https://www.continue.dev/
 clientInfo_name: continue-cli-client
 protocolVersion: 2025-06-18
-usage_rank: null
+usage_rank: 11
 support:
   tools.call:
     status: yes

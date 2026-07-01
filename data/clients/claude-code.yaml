@@ -5,7 +5,7 @@ title: Claude Code
 url: https://claude.com/product/claude-code
 clientInfo_name: claude-code
 protocolVersion: 2025-06-18
-usage_rank: null
+usage_rank: 2
 support:
   tools.call:
     status: yes
