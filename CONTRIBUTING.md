@@ -133,6 +133,34 @@ back with evidence.
 
 ---
 
+## How the matrix stays current
+
+canimcp is kept fresh by three mechanisms so it doesn't rot like a
+hand-maintained table:
+
+1. **Community submissions (client improvements).** The
+   [issue form](../../issues/new?template=client-support-report.yml) → the
+   submission bot opens a validated PR. This is the primary path for "client X
+   now supports feature Y." A maintainer merges; the site redeploys on push.
+2. **Conformance ingestion (accuracy).** `.github/workflows/ingest-conformance.yml`
+   runs nightly (and on `repository_dispatch` from an upstream SEP-1627 run),
+   ingests a conformance report, and opens a `data:conformance` PR. It overwrites
+   `apify`/unknown/stale-conformance cells but never silently overwrites
+   human-verified `manual`/`submission` cells (those are flagged for review).
+   *Note:* until SEP-1627 emits a consumable report, this runs against the
+   bundled sample — point it at the real feed via the `report_path` input or a
+   dispatch payload (see `docs/conformance-format.md`).
+3. **Spec-drift watch (spec changes).** `.github/workflows/spec-drift.yml` runs
+   weekly, compares `data/features.yaml`'s `spec_version` against the MCP repo's
+   published `schema/<date>/` revisions, and opens a `spec-drift` tracking issue
+   when the spec has moved on. A maintainer then updates the taxonomy and
+   re-verifies affected cells.
+
+Everything routes through the same CI gate (schema + taxonomy validation), so no
+update — automated or human — can land invalid data.
+
+---
+
 ## Questions
 
 Open an issue or start a discussion. This project is stewarded by

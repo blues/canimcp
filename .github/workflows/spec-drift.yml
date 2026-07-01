@@ -1,0 +1,86 @@
+name: Spec drift watch
+
+# Weekly check: has the MCP spec moved past the version canimcp tracks
+# (data/features.yaml `spec_version`)? If so, open/refresh a tracking issue so
+# a maintainer can add the new taxonomy + re-verify affected cells.
+#
+# Signal source: the MCP repo's machine-readable `schema/<YYYY-MM-DD>/` dirs.
+
+on:
+  schedule:
+    # Mondays 08:00 UTC.
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  spec-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for spec drift
+        id: drift
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx tsx scripts/spec-drift-check.ts
+
+      - name: Check for an existing open drift issue
+        id: existing
+        if: steps.drift.outputs.drift == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TITLE: "spec drift: MCP spec advanced to ${{ steps.drift.outputs.latest }}"
+        run: |
+          # Dedupe by exact title among open, labeled issues so we don't file a
+          # fresh issue every week while drift persists.
+          COUNT=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open \
+            --label spec-drift --search "in:title \"$TITLE\"" --json title \
+            --jq "[.[] | select(.title == \"$TITLE\")] | length")
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "Existing matching open issues: $COUNT"
+
+      - name: Compose issue body
+        if: steps.drift.outputs.drift == 'true' && steps.existing.outputs.count == '0'
+        run: |
+          cat > /tmp/spec-drift-issue.md <<EOF
+          The MCP specification has advanced past the revision canimcp currently tracks.
+
+          - **Tracked (\`data/features.yaml\`):** \`${{ steps.drift.outputs.current }}\`
+          - **Latest upstream:** \`${{ steps.drift.outputs.latest }}\`
+          - **Newer revision(s):** ${{ steps.drift.outputs.newer }}
+          - **All upstream revisions:** ${{ steps.drift.outputs.all }}
+
+          ## What to do
+          1. Review the new spec revision(s) at
+             https://github.com/modelcontextprotocol/modelcontextprotocol/tree/main/schema
+             and https://modelcontextprotocol.io/specification
+          2. Update \`data/features.yaml\` — bump \`spec_version\`, add/rename/retire
+             features and category \`spec_url\`s as needed.
+          3. Re-verify affected client cells (their \`last_verified\` predates the new spec);
+             conformance ingestion + community submissions will refresh the rest.
+          4. \`npm test\` + \`npx tsx scripts/build-data.ts\` must pass before merge.
+
+          _Filed automatically by the weekly Spec drift watch workflow._
+          EOF
+
+      - name: Open tracking issue
+        if: steps.drift.outputs.drift == 'true' && steps.existing.outputs.count == '0'
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "spec drift: MCP spec advanced to ${{ steps.drift.outputs.latest }}"
+          content-filepath: /tmp/spec-drift-issue.md
+          labels: spec-drift
