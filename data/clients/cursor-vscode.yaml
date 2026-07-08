@@ -18,10 +18,11 @@ support:
     provenance: manual
     last_verified: 2026-07-01
   tools.listChanged:
-    status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
+    status: no
+    provenance: conformance
+    last_verified: 2026-06-28
+    version_tested: "0.47"
+    source: https://github.com/blues/canimcp/actions/runs/1234567890
   resources.read:
     status: yes
     source: https://cursor.com/docs/mcp
@@ -80,3 +81,10 @@ support:
     notes: OAuth used to authenticate remote (SSE/HTTP) servers.
     provenance: manual
     last_verified: 2026-07-01
+  sampling.createMessage:
+    status: no
+    provenance: conformance
+    last_verified: 2026-06-28
+    version_tested: "0.47"
+    source: https://github.com/blues/canimcp/actions/runs/1234567890
+    notes: createMessage handler not implemented as of this run.
