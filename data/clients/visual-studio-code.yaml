@@ -63,11 +63,6 @@ support:
     notes: "Elicitation: request input from the user."
     provenance: manual
     last_verified: 2026-07-01
-  roots.listChanged:
-    status: yes
-    provenance: apify
-    source: https://github.com/apify/mcp-client-capabilities
-    last_verified: 2026-02-02
   transport.stdio:
     status: yes
     source: https://code.visualstudio.com/api/extension-guides/ai/mcp
