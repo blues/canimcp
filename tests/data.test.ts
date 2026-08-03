@@ -13,7 +13,7 @@ describe('features', () => {
 
   it('declares the target spec version', () => {
     const f = loadFeatures();
-    expect(f.spec_version).toBe('2025-11-25');
+    expect(f.spec_version).toBe('2026-07-28');
   });
 });
 

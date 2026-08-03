@@ -72,7 +72,6 @@ function mapSupport(client: ApifyClient): Record<string, ReturnType<typeof cell>
   }
   if (has('roots')) {
     support['roots.list'] = cell();
-    if (nested('roots', 'listChanged')) support['roots.listChanged'] = cell();
   }
   if (has('elicitation')) {
     support['elicitation.create'] = cell();
@@ -82,11 +81,11 @@ function mapSupport(client: ApifyClient): Record<string, ReturnType<typeof cell>
     if (nested('elicitation', 'url')) support['elicitation.url'] = cell();
   }
   // NOTE: Apify has no mappable data for transports, auth, completions,
-  // logging, prompts.arguments/listChanged, resources.templates, tool
-  // annotations, sampling.tools — left `unknown`. Apify's `tasks` key encodes
-  // SERVER-side task capabilities (`tasks.requests.tools.call`), which do NOT
-  // map to our CLIENT-side `tasks.*` features (sampling/elicitation/list/cancel),
-  // so tasks are intentionally not imported.
+  // logging, subscriptions, caching, prompts.arguments/listChanged,
+  // resources.templates, tool annotations, sampling.tools, or the 2026-07-28
+  // core features — left `unknown`. Its `tasks` key describes the retired core
+  // task capability, not support for the redesigned io.modelcontextprotocol/tasks
+  // extension, so tasks are intentionally not imported.
   return support;
 }
 

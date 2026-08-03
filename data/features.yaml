@@ -1,22 +1,32 @@
-spec_version: "2025-11-25"
+spec_version: "2026-07-28"
 categories:
   - id: core
     title: Core Protocol
-    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle
+    spec_url: https://modelcontextprotocol.io/specification/2026-07-28/basic
     features:
-      - id: initialization
-        title: Initialization & capability negotiation
-        spec_url: https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle
+      - id: core.stateless
+        title: Stateless requests & per-request negotiation
+      - id: core.discovery
+        title: Server discovery
+        spec_url: https://modelcontextprotocol.io/specification/2026-07-28/server/discover
+      - id: core.mrtr
+        title: Multi round-trip requests
+        spec_url: https://modelcontextprotocol.io/specification/2026-07-28/basic/patterns/mrtr
   - id: transports
     title: Transports
-    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/basic/transports
+    spec_url: https://modelcontextprotocol.io/specification/2026-07-28/basic/transports
     features:
       - { id: transport.stdio,            title: stdio }
-      - { id: transport.sse,              title: HTTP + SSE (legacy) }
+      - { id: transport.sse,              title: HTTP + SSE (deprecated) }
       - { id: transport.streamable_http,  title: Streamable HTTP }
+  - id: subscriptions
+    title: Subscriptions
+    spec_url: https://modelcontextprotocol.io/specification/2026-07-28/basic/patterns/subscriptions
+    features:
+      - { id: subscriptions.listen, title: subscriptions/listen }
   - id: tools
     title: Tools
-    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/server/tools
+    spec_url: https://modelcontextprotocol.io/specification/2026-07-28/server/tools
     features:
       - { id: tools.call,        title: Call tools }
       - { id: tools.list,        title: List tools }
@@ -24,7 +34,7 @@ categories:
       - { id: tools.annotations, title: Tool annotations }
   - id: resources
     title: Resources
-    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/server/resources
+    spec_url: https://modelcontextprotocol.io/specification/2026-07-28/server/resources
     features:
       - { id: resources.read,        title: Read resources }
       - { id: resources.list,        title: List resources }
@@ -33,52 +43,55 @@ categories:
       - { id: resources.listChanged, title: list_changed notifications }
   - id: prompts
     title: Prompts
-    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/server/prompts
+    spec_url: https://modelcontextprotocol.io/specification/2026-07-28/server/prompts
     features:
       - { id: prompts.get,         title: Get prompts }
       - { id: prompts.list,        title: List prompts }
       - { id: prompts.arguments,   title: Prompt arguments }
       - { id: prompts.listChanged, title: list_changed notifications }
   - id: sampling
-    title: Sampling
-    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/client/sampling
+    title: Sampling (deprecated)
+    spec_url: https://modelcontextprotocol.io/specification/2026-07-28/client/sampling
     features:
       - { id: sampling.createMessage, title: createMessage }
       - { id: sampling.tools,         title: Tool calling in sampling }
   - id: roots
-    title: Roots
-    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/client/roots
+    title: Roots (deprecated)
+    spec_url: https://modelcontextprotocol.io/specification/2026-07-28/client/roots
     features:
-      - { id: roots.list,        title: List roots }
-      - { id: roots.listChanged, title: list_changed notifications }
+      - { id: roots.list, title: List roots }
   - id: elicitation
     title: Elicitation
-    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/client/elicitation
+    spec_url: https://modelcontextprotocol.io/specification/2026-07-28/client/elicitation
     features:
       - { id: elicitation.create, title: Elicit user input (form mode) }
       - { id: elicitation.url,    title: URL mode elicitation }
   - id: tasks
-    title: Tasks (experimental)
-    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/basic/utilities/tasks
+    title: Tasks (extension)
+    spec_url: https://modelcontextprotocol.io/extensions/tasks/overview
     features:
-      - { id: tasks.list,        title: tasks/list }
-      - { id: tasks.cancel,      title: tasks/cancel }
-      - { id: tasks.sampling,    title: Task-augmented sampling/createMessage }
-      - { id: tasks.elicitation, title: Task-augmented elicitation/create }
+      - { id: tasks.tools,  title: Task-augmented tools/call }
+      - { id: tasks.get,    title: tasks/get }
+      - { id: tasks.update, title: tasks/update }
+      - { id: tasks.cancel, title: tasks/cancel }
+  - id: caching
+    title: Caching
+    spec_url: https://modelcontextprotocol.io/specification/2026-07-28/server/utilities/caching
+    features:
+      - { id: caching.results, title: Cacheable result hints }
   - id: completions
     title: Completions
-    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/server/utilities/completion
+    spec_url: https://modelcontextprotocol.io/specification/2026-07-28/server/utilities/completion
     features:
       - { id: completions.argument, title: Argument autocompletion }
   - id: logging
-    title: Logging
-    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/server/utilities/logging
+    title: Logging (deprecated)
+    spec_url: https://modelcontextprotocol.io/specification/2026-07-28/server/utilities/logging
     features:
-      - { id: logging.setLevel, title: Set level }
-      - { id: logging.message,  title: Receive log messages }
+      - { id: logging.message, title: Receive log messages }
   - id: auth
     title: Authorization
-    spec_url: https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization
+    spec_url: https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization
     features:
       - { id: auth.oauth,                title: OAuth 2.1 client }
       - { id: auth.client_id_metadata,   title: OAuth Client ID Metadata Documents }
