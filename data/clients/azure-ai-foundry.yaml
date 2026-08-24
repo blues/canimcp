@@ -1,0 +1,41 @@
+id: azure-ai-foundry
+title: Microsoft Azure AI Foundry
+url: https://learn.microsoft.com/en-us/azure/ai-studio/
+clientInfo_name: azure-ai-foundry
+protocolVersion: 2026-07-28
+usage_rank: 15
+support:
+  tools.list:
+    status: yes
+    source: https://learn.microsoft.com/en-us/azure/ai-services/openai/
+    notes: "Discovers and lists tool schemas from remote MCP servers during agent execution."
+    provenance: manual
+    last_verified: "2026-08-24"
+
+  tools.call:
+    status: yes
+    source: https://learn.microsoft.com/en-us/azure/ai-services/openai/
+    notes: "Invokes remote MCP server tools during agent loop execution."
+    provenance: manual
+    last_verified: "2026-08-24"
+
+  transport.streamable_http:
+    status: yes
+    source: https://learn.microsoft.com/en-us/azure/ai-services/openai/
+    notes: "Supports Streamable HTTP transport for remote MCP tools and gateways."
+    provenance: manual
+    last_verified: "2026-08-24"
+
+  transport.stdio:
+    status: no
+    source: https://learn.microsoft.com/en-us/azure/ai-services/openai/
+    notes: "Does not support local stdio transport natively without custom container hosts."
+    provenance: manual
+    last_verified: "2026-08-24"
+
+  resources.read:
+    status: partial
+    source: https://learn.microsoft.com/en-us/azure/ai-services/openai/
+    notes: "Supports static knowledge and data vector store attachments; dynamic MCP resource subscriptions depend on agent model configuration."
+    provenance: manual
+    last_verified: "2026-08-24"
