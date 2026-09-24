@@ -1,5 +1,6 @@
 # Seed-imported from apify/mcp-client-capabilities (Apache-2.0).
-# Coarse data — sub-features left `unknown`. Review & source before promoting.
+# Resource support manually verified against the Codex implementation and tests.
+# Other seed-imported sub-features remain unknown unless listed below.
 id: codex
 title: OpenAI Codex
 url: https://openai.com/codex
@@ -22,3 +23,21 @@ support:
     provenance: apify
     source: https://github.com/apify/mcp-client-capabilities
     last_verified: 2026-02-02
+  resources.read:
+    status: yes
+    provenance: manual
+    source: https://github.com/openai/codex/blob/51d45620702cd3c825d3520ddc7d7e8052a16b87/codex-rs/core/src/tools/handlers/mcp_resource/read_mcp_resource.rs
+    last_verified: "2026-09-24"
+    notes: "Codex exposes read_mcp_resource to the model and forwards the server name and resource URI to resources/read."
+  resources.list:
+    status: yes
+    provenance: manual
+    source: https://github.com/openai/codex/blob/51d45620702cd3c825d3520ddc7d7e8052a16b87/codex-rs/core/src/tools/handlers/mcp_resource/list_mcp_resources.rs
+    last_verified: "2026-09-24"
+    notes: "Codex exposes list_mcp_resources to the model, supporting a specific server with pagination or listing across accessible servers."
+  resources.templates:
+    status: yes
+    provenance: manual
+    source: https://github.com/openai/codex/blob/51d45620702cd3c825d3520ddc7d7e8052a16b87/codex-rs/core/src/tools/handlers/mcp_resource/list_mcp_resource_templates.rs
+    last_verified: "2026-09-24"
+    notes: "Codex exposes list_mcp_resource_templates to discover URI templates, supporting a specific server with pagination or listing across accessible servers."
