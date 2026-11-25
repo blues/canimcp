@@ -61,3 +61,9 @@ support:
     notes: Connects to remote servers that use OAuth (e.g. Square).
     provenance: manual
     last_verified: 2026-07-01
+  skills.list:
+    status: no
+    source: https://github.com/aaif-goose/goose/issues/12068
+    notes: "Planned (issue #12068); earlier host PRs were closed, to be rebuilt on the Rust SDK support."
+    provenance: manual
+    last_verified: 2026-11-25
