@@ -22,3 +22,9 @@ support:
     provenance: apify
     source: https://github.com/apify/mcp-client-capabilities
     last_verified: 2026-02-02
+  skills.list:
+    status: no
+    source: https://github.com/anomalyco/opencode/pull/64157
+    notes: "Experimental support behind an mcp_skills flag was proposed in PR #64157 but closed unmerged."
+    provenance: manual
+    last_verified: 2026-11-25

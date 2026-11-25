@@ -123,3 +123,21 @@ support:
     notes: Supports the Client ID Metadata Document authentication flow.
     provenance: manual
     last_verified: 2026-07-01
+  skills.list:
+    status: yes
+    source: https://techcommunity.microsoft.com/blog/azuredevcommunityblog/skills-over-mcp-are-now-available-in-vs-code/4574580
+    notes: "VS Code 1.147+ with chat.agentHost.mcpSkills.enabled; asks before loading skills from a server (allow once or always)."
+    provenance: manual
+    last_verified: 2026-11-25
+  skills.get:
+    status: yes
+    source: https://github.com/microsoft/vscode/pull/345956
+    notes: "SEP-2640 support in Copilot agent host sessions (merged 2026-11-04)."
+    provenance: manual
+    last_verified: 2026-11-25
+  skills.verify:
+    status: yes
+    source: https://github.com/modelcontextprotocol/ext-skills/blob/main/docs/implementations.md
+    notes: "Listed as beta (implements the released revision) by the Skills WG; per-server consent before loading."
+    provenance: manual
+    last_verified: 2026-11-25

@@ -41,3 +41,9 @@ support:
     source: https://github.com/openai/codex/blob/51d45620702cd3c825d3520ddc7d7e8052a16b87/codex-rs/core/src/tools/handlers/mcp_resource/list_mcp_resource_templates.rs
     last_verified: "2026-09-24"
     notes: "Codex exposes list_mcp_resource_templates to discover URI templates, supporting a specific server with pagination or listing across accessible servers."
+  skills.list:
+    status: no
+    source: https://github.com/modelcontextprotocol/ext-skills/blob/main/docs/implementations.md
+    notes: "Skill import at plugin submission was rolled back in November 2026 until support ships across ChatGPT and Codex."
+    provenance: manual
+    last_verified: 2026-11-25

@@ -17,3 +17,21 @@ support:
     provenance: apify
     source: https://github.com/apify/mcp-client-capabilities
     last_verified: 2026-02-02
+  skills.list:
+    status: partial
+    source: https://github.com/CherryHQ/cherry-studio/pull/22382
+    notes: "Discovery exposed through a list_mcp_skills tool. Merged 2026-11-21, not yet released."
+    provenance: manual
+    last_verified: 2026-11-25
+  skills.get:
+    status: partial
+    source: https://github.com/CherryHQ/cherry-studio/pull/22382
+    notes: "load_mcp_skill fetches the current manifest and SKILL.md; read_mcp_skill_file reads attachments on demand. Merged, not yet released."
+    provenance: manual
+    last_verified: 2026-11-25
+  skills.verify:
+    status: partial
+    source: https://github.com/CherryHQ/cherry-studio/pull/22382
+    notes: "Verifies SKILL.md against the manifest; rejects \"dynamic\" skills. Merged, not yet released."
+    provenance: manual
+    last_verified: 2026-11-25

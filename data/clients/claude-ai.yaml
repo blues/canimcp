@@ -50,3 +50,15 @@ support:
     notes: Custom Connectors authenticate to remote servers (commonly OAuth).
     provenance: manual
     last_verified: 2026-07-01
+  skills.list:
+    status: yes
+    source: https://claude.com/resources/articles/skills-over-mcp-tasks-and-more
+    notes: "Public beta; on by default for Pro, Max and Ultra, Team once an admin enables it, Enterprise coming soon."
+    provenance: manual
+    last_verified: 2026-11-25
+  skills.get:
+    status: yes
+    source: https://claude.com/resources/articles/skills-over-mcp-tasks-and-more
+    notes: "Claude loads a skill only when it is needed."
+    provenance: manual
+    last_verified: 2026-11-25

@@ -74,6 +74,14 @@ categories:
       - { id: tasks.get,    title: tasks/get }
       - { id: tasks.update, title: tasks/update }
       - { id: tasks.cancel, title: tasks/cancel }
+  - id: skills
+    title: Skills (extension)
+    spec_url: https://modelcontextprotocol.io/extensions/skills/overview
+    features:
+      - { id: skills.list,          title: skills/list }
+      - { id: skills.get,           title: skills/get }
+      - { id: skills.verify,        title: Verified loading (digest, size, frontmatter) }
+      - { id: skills.directoryRead, title: resources/directory/read }
   - id: caching
     title: Caching
     spec_url: https://modelcontextprotocol.io/specification/2026-07-28/server/utilities/caching

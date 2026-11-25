@@ -101,3 +101,21 @@ support:
       auto-discovered.
     provenance: manual
     last_verified: 2026-07-01
+  skills.list:
+    status: yes
+    source: https://code.claude.com/docs/en/mcp
+    notes: "Public beta; requires Claude Code v2.1.331 or later. Up to 100 skills per server."
+    provenance: manual
+    last_verified: 2026-11-25
+  skills.get:
+    status: yes
+    source: https://code.claude.com/docs/en/mcp
+    notes: "Server skills run as /<server>:<skill> and load on demand."
+    provenance: manual
+    last_verified: 2026-11-25
+  skills.verify:
+    status: yes
+    source: https://github.com/modelcontextprotocol/ext-skills/blob/main/docs/implementations.md
+    notes: "Listed as beta (implements the released revision) by the Skills WG; per-version approval of server skills."
+    provenance: manual
+    last_verified: 2026-11-25
